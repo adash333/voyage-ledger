@@ -31,7 +31,8 @@ export function balances(entries){
 }
 export function statement(entries){
  const b=balances(entries),cash=b['現金']||0,stock=b['商品']||0,sales=-(b['売上']||0),cost=b['売上原価']||0,capital=-(b['資本金']||0),profit=sales-cost;
- return {cash,stock,sales,cost,capital,profit,assets:cash+stock,sources:capital+profit,balanced:cash+stock===capital+profit};
+ const zero=n=>Object.is(n,-0)?0:n;
+ return {cash:zero(cash),stock:zero(stock),sales:zero(sales),cost:zero(cost),capital:zero(capital),profit:zero(profit),assets:zero(cash+stock),sources:zero(capital+profit),balanced:cash+stock===capital+profit};
 }
 export function preview(unitPrice){
  if(!Number.isInteger(unitPrice)||unitPrice<3||unitPrice>12)throw Error('Invalid price');
