@@ -29,3 +29,11 @@ node --check src.js
 ```
 
 GitHub Actionsの `Test` ワークフローはmainへのpushとPull Requestで自動実行されます。公開を厳密にテスト合格後に限定するには、Pagesのデプロイをテストジョブに依存させる追加設定が必要です。現状のPages（mainブランチ直接公開）はテスト失敗でも公開される場合があります。
+
+
+## CI/CD（v0.3）
+`npm run check` で構文・会計単体テスト、`npm run test:e2e` でPlaywrightのスマートフォン相当のChromium操作テストを実行します。`.github/workflows/deploy.yml` は両方が成功した場合のみGitHub Pagesへデプロイする構成です。
+
+**重要：GitHub Settings → Pages → Build and deployment → Source を `GitHub Actions` に切り替えてください。** これを行わないと、既存の `Deploy from a branch` がテスト失敗時にも公開する可能性があります。GitHub Actionsの実行結果と公開動作は別途確認が必要です。
+
+ローカルのE2E実行には `npm install` と `npx playwright install chromium` が必要です。
