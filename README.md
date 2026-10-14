@@ -19,3 +19,13 @@ Settings → Pages → Build and deployment で **Deploy from a branch**、ブ�
 
 ## ライセンス
 MIT（LICENSE参照）。
+
+## SPEC駆動開発とテスト
+仕様は `specs/`、画面非依存の会計ロジックは `accounting.mjs`、自動テストは `tests/accounting.test.mjs` に配置しています。
+
+```bash
+node --test tests/*.test.mjs
+node --check src.js
+```
+
+GitHub Actionsの `Test` ワークフローはmainへのpushとPull Requestで自動実行されます。公開を厳密にテスト合格後に限定するには、Pagesのデプロイをテストジョブに依存させる追加設定が必要です。現状のPages（mainブランチ直接公開）はテスト失敗でも公開される場合があります。
