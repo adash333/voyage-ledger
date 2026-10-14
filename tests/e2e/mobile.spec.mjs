@@ -3,6 +3,7 @@ test('SPEC-REPORT-001 mobile: financial statements and interactive ledger',async
  await page.goto('/');
  await expect(page.getByRole('heading',{name:/大航海商人アカデミー/})).toBeVisible();
  await page.getByRole('button',{name:/商会を設立/}).click();
+ await expect(page.locator('#tradeVisual')).toContainText('商品（コショウ）');
  await page.getByRole('button',{name:/仕入れる/}).click();
  await page.getByRole('button',{name:/売る/}).click();
  await expect(page.locator('#profitCard')).toContainText('30金貨');
