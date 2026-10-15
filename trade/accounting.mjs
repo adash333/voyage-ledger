@@ -49,15 +49,20 @@ function reduce(s){
 }
 export const report=(s)=>clone(reduce(s));
 function verifyHistory(s){
-  assertState(s);let prior=initialState();
+  assertState(s);
+  let prior=initialState();
   for(const e of s.events){
     if(!e||typeof e.id!=='string'||!e.id||prior.events.some(x=>x.id===e.id))throw new Error('Invalid event id');
+    if(e.voyage===prior.voyage+1 && prior.stop===3){
+      prior=nextVoyage(closeVoyage(prior));
+    }
+    if(e.voyage!==prior.voyage)throw new Error('Invalid event voyage');
     const action=e.kind==='sail'?{kind:'sail',id:e.id}:{kind:e.kind,id:e.id,good:e.good,qty:e.qty};
     const next=commit(prior,action);
     if(JSON.stringify(next.events.at(-1))!==JSON.stringify(e))throw new Error('Tampered event');
     prior=next;
-    if(e.kind==='sail'&&prior.stop===3&&prior.voyage<s.voyage){prior=closeVoyage(prior);prior=nextVoyage(prior);}
   }
+  if(s.voyage===prior.voyage+1&&prior.stop===3)prior=nextVoyage(closeVoyage(prior));
   if(prior.voyage!==s.voyage||prior.stop!==s.stop)throw new Error('Invalid progression');
   if(s.status==='closed'&&prior.stop!==3)throw new Error('Invalid close');
   if(s.status==='special'&&!canSpecialClose(prior))throw new Error('Invalid special close');
