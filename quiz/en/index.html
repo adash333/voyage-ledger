@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Test your double-entry bookkeeping skills with 10 merchant challenges, journal entries, explanations and a score out of 100.">
+  <title>Age of Discovery Merchant Challenge! | Merchant Academy</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f5f0e4;color:#233747;font-family:system-ui,sans-serif}
+    main{max-width:680px;margin:auto;padding:14px}
+    header{background:#153f50;color:white;padding:22px;border-radius:18px}
+    h1{font-size:clamp(1.45rem,5vw,2rem);margin:0}
+    h2{font-size:1.35rem;line-height:1.5}
+    p{line-height:1.7}
+    section{background:white;border-radius:18px;padding:20px;margin-top:15px}
+    button{font:inherit;cursor:pointer;border-radius:12px;padding:14px;min-height:48px;border:2px solid #c9d8da;background:#f6faf8;color:#23434b}
+    button:focus-visible,a:focus-visible{outline:3px solid #efad34;outline-offset:2px}
+    .answers{display:grid;gap:11px}
+    .answers button{text-align:left;font-weight:700;font-size:1.08rem;overflow-wrap:anywhere}
+    .answers button.selected{background:#d9f0e9;border-color:#167d73}
+    .answers button.correct{background:#d9f3e1;border-color:#239c62}
+    .answers button.wrong{background:#ffe6dd;border-color:#cb624b}
+    .primary{background:#147981;color:white;border-color:#147981;font-weight:700}
+    .primary:disabled{opacity:.45;cursor:default}
+    .bar{height:14px;border-radius:12px;background:#e3e9e7;overflow:hidden}
+    .bar>div{height:100%;background:#2d9987;transition:width .2s}
+    .feedback{background:#fff2d4;border-radius:12px;padding:13px;margin-top:14px}
+    .nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:18px}
+    .score{font-size:clamp(2rem,9vw,3.5rem);font-weight:800;text-align:center;color:#12755b}
+    .muted{color:#596773;font-size:.88rem}
+    a{color:#166c79}header a{color:#bce9ed}header a{display:inline-block;padding:6px 0}
+    [hidden]{display:none!important}
+    .journal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+    .journal-cell{min-width:0;padding:13px 10px;border-radius:12px;background:#e7f1fc;border:2px solid #9ac8ec}
+    .journal-cell:last-child{background:#e7f5e9;border-color:#7dcfa1}
+    .journal-cell span{display:block;font-size:.78rem;margin-bottom:12px;font-weight:700}
+    .journal-cell strong{display:block;font-size:clamp(.95rem,3.6vw,1.2rem);overflow-wrap:anywhere;line-height:1.6}
+    @media(max-width:400px){section{padding:15px}.nav button{padding:11px}.answers button{font-size:1rem}}
+    @media(max-width:360px){.journal-cell{padding:9px 6px}.journal-cell span{font-size:.72rem}}
+    @media(prefers-reduced-motion:reduce){.bar>div{transition:none}}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🏆 Age of Discovery Merchant Challenge!</h1>
+    <p>⛵ Become a merchant and solve the mysteries of the ledger!</p>
+    <a href="../../en/">← Back to Merchant Academy</a><br>
+    <a href="../" lang="ja">日本語版 / Japanese</a>
+  </header>
+  <section id="questionPanel" aria-label="Bookkeeping challenge">
+    <p id="progress" aria-live="polite"></p>
+    <div class="bar" aria-hidden="true"><div id="progressBar"></div></div>
+    <h2 id="question" tabindex="-1"></h2>
+    <div class="journal" role="group" aria-label="Debit and credit sides of the ledger">
+      <div class="journal-cell"><span>Debit (left)</span><strong id="journalLeft"></strong></div>
+      <div class="journal-cell"><span>Credit (right)</span><strong id="journalRight"></strong></div>
+    </div>
+    <p class="muted">Choose the answer that fills the (?). All amounts are in gold coins.</p>
+    <div id="answers" class="answers" role="group" aria-labelledby="question"></div>
+    <p id="feedback" class="feedback" aria-live="polite" hidden></p>
+    <div class="nav"><span id="status">10 questions × 10 points</span><button id="next" type="button" class="primary" disabled>Check answer →</button></div>
+  </section>
+  <section id="result" hidden>
+    <h2 id="resultTitle" tabindex="-1">🎉 Challenge complete!</h2>
+    <div class="score" id="score" aria-live="polite"></div>
+    <p id="message"></p>
+    <p id="review"></p>
+    <button id="retry" type="button" class="primary">🔁 Try again</button>
+  </section>
+  <section aria-label="More practice">
+    <p class="muted">10 questions · 100 points possible. Mistakes help you learn! Read each explanation and try as many times as you like.</p>
+    <p><a href="../../en/">⛵ Practice with Merchant Academy →</a></p>
+    <p><a href="../../history/en/">📚 Read The History of Bookkeeping →</a></p>
+  </section>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
