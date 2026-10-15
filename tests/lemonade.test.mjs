@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {steps,snapshot,journalAt} from '../lemonade/accounting.mjs';
+test('SPEC-LEMON-001 five-step balances',()=>{const expected=[[500,0,0,500,0],[1000,0,500,500,0],[400,600,500,500,0],[1600,0,500,500,600],[1100,0,0,500,600]];for(let i=0;i<5;i++){const s=snapshot(i);assert.deepEqual([s.cash,s.materials,s.debt,s.capital,s.profit],expected[i]);assert.equal(s.balanced,true)}});
+test('SPEC-LEMON-001 sale records both revenue and cost',()=>{assert.equal(steps.length,5);assert.equal(snapshot(3).sales,1200);assert.equal(snapshot(3).cost,600);assert.equal(journalAt(3).length,5);assert.throws(()=>snapshot(5))});
