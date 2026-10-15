@@ -101,3 +101,17 @@ test('SPEC-KIDS-001 both easy Japanese versions work on mobile',async({page})=>{
  await expect(page.locator('#profit')).toContainText('600えん');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+test('SPEC-KIDS-002 top and bottom navigation stay in sync',async({page})=>{
+ await page.goto('/lemonade/kids/');
+ await expect(page.locator('#counterTop')).toHaveText('1 / 5');
+ await expect(page.locator('#prevTop')).toBeDisabled();
+ await page.locator('#nextTop').click();
+ await expect(page.locator('#counter')).toHaveText('2 / 5');
+ await page.locator('#next').click();
+ await expect(page.locator('#counterTop')).toHaveText('3 / 5');
+ await page.locator('#prevTop').click();
+ await expect(page.locator('#counter')).toHaveText('2 / 5');
+ for(let n=0;n<3;n++)await page.locator('#nextTop').click();
+ await expect(page.locator('#nextTop')).toBeDisabled();
+ await expect(page.locator('#next')).toBeDisabled();
+});
