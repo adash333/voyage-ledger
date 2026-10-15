@@ -249,3 +249,13 @@ test('SPEC-HISTORY-DEBT-002 consequences of suspended debt payments are explaine
  await expect(page.getByText('What happens when a government cannot repay its debts?')).toBeVisible();
  await expect(page.locator('body')).toContainText('higher interest');
 });
+test('SPEC-HISTORY-FRANCE-001 Necker and necklace story with notes at the end',async({page})=>{
+ await page.goto('/history/');
+ await expect(page.locator('body')).toContainText('王妃の首飾り事件');
+ await expect(page.locator('body')).toContainText('160万リーブル');
+ await expect(page.getByRole('heading',{name:'第4章の歴史的な補足'})).toBeVisible();
+ await page.goto('/history/en/');
+ await expect(page.locator('body')).toContainText('Affair of the Diamond Necklace');
+ await expect(page.locator('body')).toContainText('1.6 million livres');
+ await expect(page.getByRole('heading',{name:'Historical notes on Chapter 4'})).toBeVisible();
+});
