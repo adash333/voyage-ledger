@@ -214,3 +214,12 @@ test('SPEC-HERO-001 compact mobile nautical header and English link',async({page
  expect(size.height).toBeLessThan(240);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+test('SPEC-HISTORY-PEPPER-001 illustrated pepper trade balances on mobile in both languages',async({page})=>{
+ for(const route of ['/history/','/history/en/']){
+  await page.goto(route);
+  await expect(page.locator('.pepper-trade-item')).toHaveCount(2);
+  await expect(page.locator('.pepper-entry')).toHaveCount(2);
+  await expect(page.locator('.pepper-equal')).toContainText('60');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ }
+});
