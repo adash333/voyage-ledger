@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {questions,score} from '../quiz/questions.mjs';
+test('SPEC-QUIZ-001 ten unique three-choice questions, ten points each',()=>{assert.equal(questions.length,10);assert.equal(new Set(questions.map(q=>q.q)).size,10);for(const q of questions){assert.equal(q.options.length,3);assert.ok(q.answer>=0&&q.answer<3);assert.ok(q.why)}});
+test('SPEC-QUIZ-001 scoring 0 to 100',()=>{assert.equal(score(questions.map(q=>q.answer)),100);assert.equal(score(questions.map(q=>(q.answer+1)%3)),0);assert.equal(score(questions.map((q,i)=>i<5?q.answer:(q.answer+1)%3)),50);assert.throws(()=>score([]))});
