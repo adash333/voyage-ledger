@@ -118,9 +118,11 @@ test('SPEC-KIDS-002 top and bottom navigation stay in sync',async({page})=>{
 test('SPEC-QUIZ-001 mobile: ten answers give 100 points and retry resets',async({page})=>{
  await page.goto('/quiz/');
  await expect(page.getByRole('heading',{name:/100てん チャレンジ/})).toBeVisible();
- const answers=[2,1,0,1,1,0,2,0,1,2];
+ const answers=[1,0,2,1,0,2,1,0,2,1];
  for(let i=0;i<10;i++){
   await expect(page.locator('#next')).toBeDisabled();
+  await expect(page.locator('#journalLeft')).not.toBeEmpty();
+  await expect(page.locator('#journalRight')).toContainText('（？）');
   await page.locator('#answers button').nth(answers[i]).click();
   await page.locator('#next').click();
   await expect(page.locator('#feedback')).toContainText('せいかい');
