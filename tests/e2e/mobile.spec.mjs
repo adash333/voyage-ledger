@@ -78,3 +78,11 @@ test('SPEC-I18N-001 English merchant and lemonade pages work on mobile',async({p
  await expect(page.locator('#equality')).toContainText('1,100');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+test('SPEC-NAV-001 related game link is below main learning sections',async({page})=>{
+ await page.goto('/');
+ const link=page.getByRole('link',{name:/レモネード屋さんの複式簿記も遊んでみよう/});
+ await expect(link).toBeVisible();
+ const positions=await page.evaluate(()=>({link:document.querySelector('.related-games').getBoundingClientRect().top,report:document.querySelector('#report').getBoundingClientRect().top}));
+ expect(positions.link).toBeGreaterThan(positions.report);
+ await expect(page.getByRole('link',{name:/English version/}).first()).toHaveAttribute('href','./en/');
+});
