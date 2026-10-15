@@ -184,7 +184,7 @@ test('SPEC-HISTORY-EN-001 English history includes six illustrated chapters and 
  await expect(page.locator('figure.chapter-art')).toHaveCount(6);
  for(let i=1;i<=6;i++)await expect(page.getByText('Chapter '+i+' ·',{exact:false})).toBeVisible();
  await expect(page.getByRole('heading',{name:/Financial Statements: A Health Check/})).toBeVisible();
- await page.getByRole('link',{name:/Japanese/}).click();
+ await page.locator('a[href="../"]').filter({hasText:'日本語版 / Japanese'}).click();
  await expect(page).toHaveURL(/\/history\//);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
