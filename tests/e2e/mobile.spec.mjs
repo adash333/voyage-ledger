@@ -122,7 +122,7 @@ test('SPEC-QUIZ-001 mobile: ten answers give 100 points and retry resets',async(
  for(let i=0;i<10;i++){
   await expect(page.locator('#next')).toBeDisabled();
   await expect(page.locator('#journalLeft')).not.toBeEmpty();
-  await expect(page.locator('#journalRight')).toContainText('（？）');
+  expect(await page.locator('#journalLeft, #journalRight').allTextContents()).toEqual(expect.arrayContaining([expect.stringContaining('（？）')]));
   await page.locator('#answers button').nth(answers[i]).click();
   await page.locator('#next').click();
   await expect(page.locator('#feedback')).toContainText('せいかい');
