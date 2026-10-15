@@ -133,12 +133,13 @@ test('SPEC-QUIZ-001 mobile: ten answers give 100 points and retry resets',async(
  await expect(page.locator('#progress')).toContainText('だい 1もん');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
-test('SPEC-HISTORY-001 reading page opens from homepage and has five chapters',async({page})=>{
+test('SPEC-HISTORY-001 reading page opens from homepage and has six chapters',async({page})=>{
  await page.goto('/');
  await page.getByRole('link',{name:/お金持ちになるために、なぜ簿記を学ぶの/}).click();
  await expect(page).toHaveURL(/\/history\//);
  await expect(page.getByRole('heading',{name:/帳簿の世界史/})).toBeVisible();
- for(let i=1;i<=5;i++)await expect(page.getByText('第'+i+'章', {exact:false})).toBeVisible();
+ await expect(page.locator('p.chapter')).toHaveCount(6);
+ for(let i=1;i<=6;i++)await expect(page.locator('p.chapter').filter({hasText:'第'+i+'章・'})).toBeVisible();
  await expect(page.getByRole('link',{name:/YouTube/})).toHaveAttribute('href','https://youtu.be/T6j6C49bsss');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
@@ -198,12 +199,59 @@ test('SPEC-HISTORY-INTRO-001 introductory illustration appears in Japanese and E
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  }
 });
-test('SPEC-SAVE-UI-001 JSON file controls are hidden from Japanese merchant page',async({page})=>{
- await page.goto('/');
- await expect(page.locator('#export')).toHaveCount(0);
- await expect(page.locator('#import')).toHaveCount(0);
- await expect(page.getByRole('button',{name:'最初から遊ぶ'})).toBeVisible();
+for(const [route,resetLabel] of [['/','最初から遊ぶ'],['/en/','Start over']]){
+ test('SPEC-SAVE-UI-001 JSON file controls are absent from merchant page '+route,async({page})=>{
+  const errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(route);
+  await expect(page.locator('#export, #import, input[type="file"]')).toHaveCount(0);
+  await expect(page.getByRole('button',{name:/Export save/i})).toHaveCount(0);
+  await expect(page.getByText('Import save:',{exact:false})).toHaveCount(0);
+  await expect(page.getByRole('button',{name:resetLabel,exact:true})).toBeVisible();
+  await expect(page.locator('#feedback')).toContainText(route==='/en/'?'The journal is balanced':'借方（左）と貸方（右）');
+  expect(errors).toEqual([]);
+ });
+}
+
+test('SPEC-SAVE-EN-001 English progress autosaves and Start over persists only after confirmation',async({page})=>{
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/en/');
+ const trades=[['Invest 100 gold coins','100 coins','0 bags',1],['Buy 10 bags for 60 coins','40 coins','10 bags',2],['Sell 10 bags for 90 coins','130 coins','0 bags',4]];
+ for(const [button,cash,stock,entries] of trades){
+  await page.getByRole('button',{name:button,exact:true}).click();
+  await page.reload();
+  await expect(page.locator('#cash')).toHaveText(cash);
+  await expect(page.locator('#stock')).toHaveText(stock);
+  await expect(page.locator('#ledger tr')).toHaveCount(entries);
+ }
+ await expect(page.locator('#chapter')).toHaveText('🎉 Trading complete!');
+ await expect(page.locator('#profit')).toHaveText('30 coins');
+ const completedSave=await page.evaluate(()=>localStorage.getItem('voyage-ledger-v1'));
+ page.once('dialog',async dialog=>{
+  expect(dialog.type()).toBe('confirm');
+  expect(dialog.message()).toBe('Start again?');
+  await dialog.dismiss();
+ });
+ await page.getByRole('button',{name:'Start over',exact:true}).click();
+ await page.reload();
+ await expect(page.locator('#cash')).toHaveText('130 coins');
+ await expect(page.locator('#ledger tr')).toHaveCount(4);
+ expect(await page.evaluate(()=>localStorage.getItem('voyage-ledger-v1'))).toBe(completedSave);
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Start over',exact:true}).click();
+ await expect(page.locator('#cash')).toHaveText('0 coins');
+ await page.reload();
+ await expect(page.locator('#chapter')).toHaveText('Start your trading company');
+ await expect(page.locator('#cash')).toHaveText('0 coins');
+ await expect(page.locator('#stock')).toHaveText('0 bags');
+ await expect(page.locator('#profit')).toHaveText('0 coins');
+ await expect(page.locator('#ledger tr')).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'Invest 100 gold coins',exact:true})).toBeVisible();
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('voyage-ledger-v1')))).toEqual({step:0,entries:[]});
+ expect(errors).toEqual([]);
 });
+
 test('SPEC-HERO-001 compact mobile nautical header and English link',async({page})=>{
  await page.goto('/');
  const hero=page.locator('header.hero');
