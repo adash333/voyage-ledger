@@ -85,3 +85,24 @@ test('TRADE-SAVE: restore validates event history and rejects tampering',()=>{
  const tampered=structuredClone(s);tampered.events[0].price=1;
  assert.throws(()=>restore(tampered));
 });
+
+test('TRADE-CARRYOVER: FIFO lots survive the next voyage and restore',()=>{
+ let s=buy(initialState(),'glass','glass',2);
+ for(let i=0;i<3;i++)s=sail(s,'o'+i);
+ s=nextVoyage(closeVoyage(s));
+ assert.deepEqual(restore(s),s);
+ assert.equal(s.voyage,2);
+ assert.equal(report(s).inventory.glass.cost,10);
+ s=sell(s,'sold','glass',1);
+ assert.equal(report(s).current.sales,8);
+ assert.equal(report(s).current.cost,5);
+ assert.equal(report(s).current.profit,3);
+ assert.equal(report(s).inventory.glass.cost,5);
+ assert.deepEqual(restore(s),s);
+});
+test('TRADE-ENTRY: sale preview includes two balanced journal entries',()=>{
+ let s=buy(initialState(),'buy','glass',2);
+ const p=preview(s,{kind:'sell',good:'glass',qty:1});
+ assert.deepEqual(p.entries,[{debit:'現金',credit:'売上',amount:5},{debit:'売上原価',credit:'商品',amount:5}]);
+ assert.equal(report(s).sales,0);
+});
