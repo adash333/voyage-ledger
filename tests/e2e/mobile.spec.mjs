@@ -178,7 +178,7 @@ test('SPEC-HISTORY-003 chapter six describes financial statements',async({page})
 });
 test('SPEC-HISTORY-EN-001 English history includes six illustrated chapters and language links',async({page})=>{
  await page.goto('/history/');
- await page.getByRole('link',{name:/English version/}).click();
+ await page.locator('a[href="./en/"]').filter({hasText:/English Version/i}).click();
  await expect(page).toHaveURL(/\/history\/en\//);
  await expect(page.getByRole('heading',{name:/The History of Bookkeeping/})).toBeVisible();
  await expect(page.locator('figure.chapter-art')).toHaveCount(6);
