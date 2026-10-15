@@ -13,7 +13,7 @@ test('SPEC-REPORT-001 mobile: financial statements and interactive ledger',async
  await expect(page.locator('#priceResult')).toContainText('30金貨');
  await page.locator('#salePrice').fill('5');
  await expect(page.locator('#priceResult')).toContainText('-10金貨');
- await expect(page.locator('#profit')).toContainText('30枚');
+ await expect(page.locator('#profit')).toContainText('金貨30枚');
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
  expect(overflow).toBe(false);
 });
@@ -21,7 +21,7 @@ test('SPEC-SAVE-001 mobile: progress survives reload',async({page})=>{
  await page.goto('/');
  await page.getByRole('button',{name:/商会を設立/}).click();
  await page.reload();
- await expect(page.locator('#cash')).toContainText('100枚');
+ await expect(page.locator('#cash')).toContainText('金貨100枚');
  await expect(page.getByRole('button',{name:/仕入れる/})).toBeVisible();
 });
 test('SPEC-REPORT-002 mobile: title and stat values stay on one line',async({page})=>{
@@ -34,4 +34,19 @@ test('SPEC-REPORT-002 mobile: title and stat values stay on one line',async({pag
  expect(await singleLine('#stock')).toBe(true);
  expect(await singleLine('#cash')).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('SPEC-REPORT-003 mobile: currency units and separate inventory lines',async({page})=>{
+ await page.setViewportSize({width:360,height:780});
+ await page.goto('/');
+ await page.getByRole('button',{name:/商会を設立/}).click();
+ await page.getByRole('button',{name:/仕入れる/}).click();
+ await expect(page.locator('#cash')).toHaveText('金貨40枚');
+ await expect(page.locator('#stock')).toHaveText('10袋');
+ await expect(page.locator('#stockValue')).toHaveText('（金貨60枚分）');
+ const separate=await page.evaluate(()=>document.querySelector('#stockValue').getBoundingClientRect().top>=document.querySelector('#stock').getBoundingClientRect().bottom);
+ expect(separate).toBe(true);
+ await page.getByRole('button',{name:/売る/}).click();
+ await expect(page.locator('#cash')).toHaveText('金貨130枚');
+ await expect(page.locator('#profit')).toHaveText('金貨30枚');
 });
