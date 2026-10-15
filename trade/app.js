@@ -30,8 +30,21 @@ function render(){
  $('closeBtn').hidden=state.status!=='active'||state.stop!==3;
  $('specialBtn').hidden=!canSpecialClose(state);
  $('journal').innerHTML=r.journal.map((j,i)=>'<div class="journal-entry"><strong>'+(i+1)+'. '+(j.voyage?'第'+j.voyage+'航海':'商会設立')+'</strong>'+entriesHTML([j])+'<details><summary>なぜ？ 詳しく見る</summary><p>借方と貸方に同じ金額を記録しています。</p></details></div>').join('');
- const rows=[['売上',r.current.sales],['売上原価',r.current.cost],['航海費',r.current.fares],['今回の利益',r.current.profit],['累積利益',r.profit],['現金',r.cash],...GOODS.map(g=>[names[g]+'（'+r.inventory[g].qty+'個）',r.inventory[g].cost]),['総資産',r.assets],['資本金＋累積利益',r.capital+r.profit]];
- $('report').innerHTML=rows.map(([k,v])=>'<div class="metric">'+escapeHTML(k)+'：<strong>'+money(v)+'</strong></div>').join('')+'<p>資産と資本金＋累積利益は一致しています。</p>';
+ const row=(label,value)=>'<div class="statement-row"><span>'+escapeHTML(label)+'</span><strong>'+money(value)+'</strong></div>';
+ const inventoryCost=r.assets-r.cash;
+ const assets=row('現金',r.cash)+GOODS.map(g=>row(names[g]+'（'+r.inventory[g].qty+'個）',r.inventory[g].cost)).join('');
+ const equity=row('資本金（最初の元手）',r.capital)+row('累積利益',r.profit);
+ $('report').innerHTML=
+  '<section class="statement" aria-labelledby="pl-title"><h3 id="pl-title">① 損益計算書（P/L）</h3><p class="hint">今回の航海で、いくらもうかった？</p>'+
+  row('売上',r.current.sales)+row('売上原価',r.current.cost)+row('航海費',r.current.fares)+
+  '<div class="statement-total">'+row('今回の利益',r.current.profit)+'</div></section>'+
+  '<section class="statement" aria-labelledby="bs-title"><h3 id="bs-title">② 貸借対照表（B/S）</h3><p class="hint">今ある財産と、そのお金の出どころを比べよう。</p>'+
+  '<div class="balance-columns"><div class="balance-side asset-side"><h4>左：資産（持っているもの）</h4>'+assets+
+  '<div class="statement-total">'+row('資産合計',r.assets)+'</div></div>'+
+  '<div class="balance-side equity-side"><h4>右：負債・純資産（お金の出どころ）</h4>'+
+  '<p class="hint">借入金はないため、負債は0枚です。</p>'+row('負債（借金）',0)+equity+
+  '<div class="statement-total">'+row('負債・純資産合計',r.capital+r.profit)+'</div></div></div>'+
+  '<p class="balance-check" role="status">'+(r.assets===r.capital+r.profit?'✓ 左右の合計は一致しています。':'左右の金額が一致しません。')+'</p></section>';
  $('outcome').hidden=state.status==='active';
  if(state.status!=='active'){
    $('result').innerHTML='<p>今回の利益：<strong>'+money(r.current.profit)+'</strong> ／ 累積利益：<strong>'+money(r.profit)+'</strong></p><p>現金：'+money(r.cash)+' ／ 在庫原価：'+money(r.assets-r.cash)+' ／ 総資産：'+money(r.assets)+'</p><p>売上'+money(r.current.sales)+' − 原価'+money(r.current.cost)+' − 航海費'+money(r.current.fares)+' ＝ 今回の利益'+money(r.current.profit)+'</p><p>'+(r.assets>r.cash?'売れ残った商品も、仕入原価で財産として残っています。':'商品を売り切ったので、財産は現金になっています。')+'</p><p>次のヒント：港の相場と航海費を比べて、買う商品と売る場所を考えてみましょう。</p>';
