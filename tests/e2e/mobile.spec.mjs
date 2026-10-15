@@ -133,3 +133,12 @@ test('SPEC-QUIZ-001 mobile: ten answers give 100 points and retry resets',async(
  await expect(page.locator('#progress')).toContainText('だい 1もん');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+test('SPEC-HISTORY-001 reading page opens from homepage and has five chapters',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('link',{name:/お金持ちになるために、なぜ簿記を学ぶの/}).click();
+ await expect(page).toHaveURL(/\/history\//);
+ await expect(page.getByRole('heading',{name:/帳簿の世界史/})).toBeVisible();
+ for(let i=1;i<=5;i++)await expect(page.getByText('第'+i+'章', {exact:false})).toBeVisible();
+ await expect(page.getByRole('link',{name:/YouTube/})).toHaveAttribute('href','https://youtu.be/T6j6C49bsss');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
