@@ -63,3 +63,18 @@ test('SPEC-LEMON-001 mobile lemonade page navigation and accounting',async({page
  await expect(page.locator('#equality')).toContainText('1,100円');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+
+test('SPEC-I18N-001 English merchant and lemonade pages work on mobile',async({page})=>{
+ await page.goto('/en/');
+ await expect(page.getByRole('heading',{name:/Merchant Academy/})).toBeVisible();
+ await page.getByRole('button',{name:/Invest 100 gold coins/}).click();
+ await page.getByRole('button',{name:/Buy 10 bags/}).click();
+ await page.getByRole('button',{name:/Sell 10 bags/}).click();
+ await expect(page.locator('#profit')).toContainText('30 coins');
+ await page.getByRole('link',{name:/Lemonade Stand lesson/}).click();
+ await expect(page).toHaveURL(/\/lemonade\/en\//);
+ await expect(page.locator('#equality')).toContainText('500');
+ await page.getByRole('button',{name:/STEP 5/}).click();
+ await expect(page.locator('#equality')).toContainText('1,100');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
