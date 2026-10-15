@@ -86,3 +86,18 @@ test('SPEC-NAV-001 related game link is below main learning sections',async({pag
  expect(positions.link).toBeGreaterThan(positions.report);
  await expect(page.getByRole('link',{name:/English version/}).first()).toHaveAttribute('href','./en/');
 });
+
+test('SPEC-KIDS-001 both easy Japanese versions work on mobile',async({page})=>{
+ await page.goto('/kids/');
+ await expect(page.getByRole('heading',{name:/こしょうやさん/})).toBeVisible();
+ await page.getByRole('button',{name:/100まいを いれる/}).click();
+ await page.getByRole('button',{name:/こしょうを かう/}).click();
+ await page.getByRole('button',{name:/こしょうを うる/}).click();
+ await expect(page.locator('#profit')).toContainText('30まい');
+ await page.goto('/lemonade/kids/');
+ await expect(page.getByRole('heading',{name:/れもねーどやさん/})).toBeVisible();
+ for(let i=0;i<4;i++)await page.getByRole('button',{name:/つぎへ/}).click();
+ await expect(page.locator('#cash')).toContainText('1100えん');
+ await expect(page.locator('#profit')).toContainText('600えん');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
