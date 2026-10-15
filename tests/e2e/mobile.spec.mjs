@@ -188,3 +188,13 @@ test('SPEC-HISTORY-EN-001 English history includes six illustrated chapters and 
  await expect(page).toHaveURL(/\/history\//);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+test('SPEC-HISTORY-INTRO-001 introductory illustration appears in Japanese and English',async({page})=>{
+ for(const route of ['/history/','/history/en/']){
+  await page.goto(route);
+  const art=page.locator('figure.intro-art');
+  await expect(art).toHaveCount(1);
+  await expect(art.locator('svg')).toBeVisible();
+  await expect(art).toHaveAttribute('aria-label',/.+/);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ }
+});
