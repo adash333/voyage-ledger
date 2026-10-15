@@ -142,3 +142,14 @@ test('SPEC-HISTORY-001 reading page opens from homepage and has five chapters',a
  await expect(page.getByRole('link',{name:/YouTube/})).toHaveAttribute('href','https://youtu.be/T6j6C49bsss');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+test('SPEC-HISTORY-002 five chapter illustrations are visible on mobile',async({page})=>{
+ await page.goto('/history/');
+ const art=page.locator('figure.chapter-art');
+ await expect(art).toHaveCount(5);
+ for(let i=0;i<5;i++){
+  await art.nth(i).scrollIntoViewIfNeeded();
+  await expect(art.nth(i).locator('svg')).toBeVisible();
+  await expect(art.nth(i)).toHaveAttribute('aria-label',/.+/);
+ }
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
