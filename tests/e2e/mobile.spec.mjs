@@ -24,3 +24,14 @@ test('SPEC-SAVE-001 mobile: progress survives reload',async({page})=>{
  await expect(page.locator('#cash')).toContainText('100枚');
  await expect(page.getByRole('button',{name:/仕入れる/})).toBeVisible();
 });
+test('SPEC-REPORT-002 mobile: title and stat values stay on one line',async({page})=>{
+ await page.setViewportSize({width:360,height:780});
+ await page.goto('/');
+ const singleLine=async(selector)=>page.locator(selector).evaluate(el=>{const rect=el.getBoundingClientRect();const style=getComputedStyle(el);return rect.height<=parseFloat(style.lineHeight)*1.55});
+ expect(await singleLine('header h1 .title-name')).toBe(true);
+ await page.getByRole('button',{name:/商会を設立/}).click();
+ await page.getByRole('button',{name:/仕入れる/}).click();
+ expect(await singleLine('#stock')).toBe(true);
+ expect(await singleLine('#cash')).toBe(true);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
