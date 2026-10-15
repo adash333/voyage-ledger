@@ -29,3 +29,16 @@ test('TRADE-UI-002: sail preview, departure and reload persistence',async({page}
  await expect(page.locator('#summary')).toContainText('アレクサンドリア');
  await expect(page.locator('#summary')).toContainText('金貨95枚');
 });
+
+test('TRADE-UI-003: P/L and B/S separated and balance on mobile',async({page})=>{
+ await page.goto('/trade/');
+ const skip=page.getByRole('button',{name:'スキップ'});
+ if(await skip.isVisible())await skip.click();
+ await page.locator('#tab-report').click();
+ await expect(page.getByRole('heading',{name:/損益計算書（P\/L）/})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/貸借対照表（B\/S）/})).toBeVisible();
+ await expect(page.locator('.asset-side')).toContainText('現金');
+ await expect(page.locator('.equity-side')).toContainText('資本金');
+ await expect(page.locator('.balance-check')).toContainText('一致しています');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
