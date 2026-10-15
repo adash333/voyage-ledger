@@ -198,3 +198,9 @@ test('SPEC-HISTORY-INTRO-001 introductory illustration appears in Japanese and E
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  }
 });
+test('SPEC-SAVE-UI-001 JSON file controls are hidden from Japanese merchant page',async({page})=>{
+ await page.goto('/');
+ await expect(page.locator('#export')).toHaveCount(0);
+ await expect(page.locator('#import')).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'最初から遊ぶ'})).toBeVisible();
+});
