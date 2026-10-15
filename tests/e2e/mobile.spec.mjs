@@ -229,3 +229,9 @@ test('SPEC-HISTORY-DATES-001 historical years appear in both languages',async({p
  await page.goto('/history/en/');
  for(const year of ['1429','1464','1494','1557','1575','1596','1781','2001','2008'])await expect(page.locator('body')).toContainText(year);
 });
+test('SPEC-HISTORY-SPAIN-001 silver mine locations and war dates in both languages',async({page})=>{
+ await page.goto('/history/');
+ for(const term of ['ポトシ','サカテカス','1568','1585','1557'])await expect(page.locator('body')).toContainText(term);
+ await page.goto('/history/en/');
+ for(const term of ['Potosí','Zacatecas','1568','1585','1557'])await expect(page.locator('body')).toContainText(term);
+});
