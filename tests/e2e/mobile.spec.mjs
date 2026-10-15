@@ -50,3 +50,16 @@ test('SPEC-REPORT-003 mobile: currency units and separate inventory lines',async
  await expect(page.locator('#cash')).toHaveText('金貨130枚');
  await expect(page.locator('#profit')).toHaveText('金貨30枚');
 });
+
+test('SPEC-LEMON-001 mobile lemonade page navigation and accounting',async({page})=>{
+ await page.goto('/');
+ await page.getByRole('link',{name:/レモネード屋さんの複式簿記も遊んでみよう/}).click();
+ await expect(page).toHaveURL(/\/lemonade\//);
+ await expect(page.locator('#equality')).toContainText('500円');
+ await page.getByRole('button',{name:/STEP 4/}).click();
+ await expect(page.locator('#equality')).toContainText('1,600円');
+ await expect(page.locator('#lesson')).toContainText('600円');
+ await page.getByRole('button',{name:/STEP 5/}).click();
+ await expect(page.locator('#equality')).toContainText('1,100円');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
