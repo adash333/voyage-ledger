@@ -204,3 +204,13 @@ test('SPEC-SAVE-UI-001 JSON file controls are hidden from Japanese merchant page
  await expect(page.locator('#import')).toHaveCount(0);
  await expect(page.getByRole('button',{name:'最初から遊ぶ'})).toBeVisible();
 });
+test('SPEC-HERO-001 compact mobile nautical header and English link',async({page})=>{
+ await page.goto('/');
+ const hero=page.locator('header.hero');
+ await expect(hero.getByRole('heading',{name:/大航海商人アカデミー/})).toBeVisible();
+ await expect(hero.locator('.hero-ship')).toBeVisible();
+ await expect(hero.getByRole('link',{name:/English version/i})).toHaveAttribute('href','./en/');
+ const size=await hero.boundingBox();
+ expect(size.height).toBeLessThan(240);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
