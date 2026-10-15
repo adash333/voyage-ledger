@@ -241,3 +241,11 @@ test('SPEC-HISTORY-DEBT-001 debt payment suspension explained in both languages'
  await page.goto('/history/en/');
  await expect(page.locator('body')).toContainText('negotiates new terms with its lenders');
 });
+test('SPEC-HISTORY-DEBT-002 consequences of suspended debt payments are explained',async({page})=>{
+ await page.goto('/history/');
+ await expect(page.getByText('国が借りたお金を返せなくなると、何が困るのでしょうか？')).toBeVisible();
+ await expect(page.locator('body')).toContainText('高い利息');
+ await page.goto('/history/en/');
+ await expect(page.getByText('What happens when a government cannot repay its debts?')).toBeVisible();
+ await expect(page.locator('body')).toContainText('higher interest');
+});
