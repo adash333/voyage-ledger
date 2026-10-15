@@ -96,7 +96,7 @@ test('SPEC-KIDS-001 both easy Japanese versions work on mobile',async({page})=>{
  await expect(page.locator('#profit')).toContainText('30まい');
  await page.goto('/lemonade/kids/');
  await expect(page.getByRole('heading',{name:/れもねーどやさん/})).toBeVisible();
- for(let i=0;i<4;i++)await page.getByRole('button',{name:/つぎへ/}).click();
+ for(let i=0;i<4;i++)await page.locator('#nextTop').click();
  await expect(page.locator('#cash')).toContainText('1100えん');
  await expect(page.locator('#profit')).toContainText('600えん');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
