@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {questions,score} from '../lemonade/quiz/questions.mjs';
+test('SPEC-LEMON-QUIZ-001 ten distinct accounting questions',()=>{assert.equal(questions.length,10);assert.equal(new Set(questions.map(x=>x.q)).size,10);for(const q of questions){assert.equal(q.options.length,3);assert.ok(q.left&&q.right&&q.why);assert.ok(q.left.includes('（？）')||q.right.includes('（？）'));assert.ok(Number.isInteger(q.answer)&&q.answer>=0&&q.answer<3)}});
+test('SPEC-LEMON-QUIZ-001 scoring',()=>{assert.equal(score(questions.map(q=>q.answer)),100);assert.equal(score(questions.map(q=>(q.answer+1)%3)),0);assert.throws(()=>score([]))});
