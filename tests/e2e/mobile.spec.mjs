@@ -223,3 +223,9 @@ test('SPEC-HISTORY-PEPPER-001 illustrated pepper trade balances on mobile in bot
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  }
 });
+test('SPEC-HISTORY-DATES-001 historical years appear in both languages',async({page})=>{
+ await page.goto('/history/');
+ for(const year of ['1429','1464','1494','1557','1575','1596','1781','2001','2008'])await expect(page.locator('body')).toContainText(year);
+ await page.goto('/history/en/');
+ for(const year of ['1429','1464','1494','1557','1575','1596','1781','2001','2008'])await expect(page.locator('body')).toContainText(year);
+});
