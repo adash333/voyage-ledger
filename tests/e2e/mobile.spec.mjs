@@ -117,7 +117,7 @@ test('SPEC-KIDS-002 top and bottom navigation stay in sync',async({page})=>{
 });
 test('SPEC-QUIZ-001 mobile: ten answers give 100 points and retry resets',async({page})=>{
  await page.goto('/quiz/');
- await expect(page.getByRole('heading',{name:/100てん チャレンジ/})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/大航海時代の商人チャレンジ/})).toBeVisible();
  const answers=[1,0,2,1,0,2,1,0,2,1];
  for(let i=0;i<10;i++){
   await expect(page.locator('#next')).toBeDisabled();
