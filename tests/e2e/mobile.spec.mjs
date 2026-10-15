@@ -142,14 +142,37 @@ test('SPEC-HISTORY-001 reading page opens from homepage and has five chapters',a
  await expect(page.getByRole('link',{name:/YouTube/})).toHaveAttribute('href','https://youtu.be/T6j6C49bsss');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
-test('SPEC-HISTORY-002 five chapter illustrations are visible on mobile',async({page})=>{
+test('SPEC-HISTORY-002 six chapter illustrations are visible on mobile',async({page})=>{
  await page.goto('/history/');
  const art=page.locator('figure.chapter-art');
- await expect(art).toHaveCount(5);
- for(let i=0;i<5;i++){
+ await expect(art).toHaveCount(6);
+ for(let i=0;i<6;i++){
   await art.nth(i).scrollIntoViewIfNeeded();
   await expect(art.nth(i).locator('svg')).toBeVisible();
   await expect(art.nth(i)).toHaveAttribute('aria-label',/.+/);
  }
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+test('SPEC-LEMON-QUIZ-001 full-score mobile quiz',async({page})=>{
+ await page.goto('/lemonade/');
+ await page.getByRole('link',{name:/クイズにちょうせんする/}).click();
+ await expect(page).toHaveURL(/\/lemonade\/quiz\//);
+ await expect(page.getByRole('heading',{name:/レモネード屋さんの商人チャレンジ/})).toBeVisible();
+ const answers=[1,2,0,2,1,0,1,0,2,1];
+ for(const answer of answers){
+  await expect(page.locator('#journalLeft')).not.toBeEmpty();
+  await page.locator('#answers button').nth(answer).click();
+  await page.locator('#next').click();
+  await expect(page.locator('#feedback')).toContainText('せいかい');
+  await page.locator('#next').click();
+ }
+ await expect(page.locator('#score')).toHaveText('100 / 100てん');
+ await page.locator('#retry').click();
+ await expect(page.locator('#progress')).toContainText('だい 1もん');
+});
+test('SPEC-HISTORY-003 chapter six describes financial statements',async({page})=>{
+ await page.goto('/history/');
+ await expect(page.getByRole('heading',{name:/会社の健康診断書を読もう/})).toBeVisible();
+ await expect(page.getByText(/就職先を調べるとき/)).toBeVisible();
+ await expect(page.getByText(/個別株を買ったり売ったりするとき/)).toBeVisible();
 });
