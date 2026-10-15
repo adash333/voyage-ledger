@@ -1,0 +1,7 @@
+import {steps,snapshot} from '../accounting.mjs';const $=id=>document.getElementById(id);let i=0;
+const titles=['じぶんの おかねで スタート！','おかねを かりよう！','ざいりょうを かおう！','れもねーどを うろう！','かりた おかねを かえそう！'];
+const stories=['じぶんの ちょきん500えんを おみせに いれよう。','おうちの ひとから500えん かりよう。あとで かえす おかねだよ。','れもんや さとう、コップを 600えんで かおう。','れもねーどを ぜんぶで1200えん うったよ！ ざいりょうは600えん だったから、600えんの もうけだよ。','かりた500えんを かえそう。かりた おかねが なくなっても、もうけは600えんの ままだよ。'];
+const left=['おかね ＋500','おかね ＋500','ざいりょう ＋600','おかね ＋1200','かりた おかね −500'];const right=['もとで ＋500','かりた おかね ＋500','おかね −600','うりあげ ＋1200','おかね −500'];
+const notes=['じぶんの おかねが おみせの おかねに なったよ。','おかねが ふえたけど、かえす やくそくも ふえたよ。','おかねが ざいりょうに かわったよ。','うった おかねと、ざいりょうの ねだんを くらべよう。','おかねが へったけど、かりた おかねも へったよ。'];
+function render(){const s=snapshot(i);$('stage').textContent='ステップ '+(i+1)+' / 5';$('title').textContent=titles[i];$('story').textContent=stories[i];$('cash').textContent=s.cash+'えん';$('materials').textContent=s.materials+'えんぶん';$('debt').textContent=s.debt+'えん';$('profit').textContent=s.profit+'えん';$('debit').textContent=left[i];$('credit').textContent=right[i];$('lesson').textContent=notes[i];$('balance').textContent='もっているもの '+s.assets+'えん ＝ かりた おかね '+s.debt+'えん ＋ もとで '+s.capital+'えん ＋ もうけ '+s.profit+'えん';$('counter').textContent=(i+1)+' / 5';$('prev').disabled=i===0;$('next').disabled=i===4}
+$('prev').onclick=()=>{i=Math.max(0,i-1);render()};$('next').onclick=()=>{i=Math.min(4,i+1);render()};render();
