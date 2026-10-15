@@ -115,3 +115,19 @@ test('SPEC-KIDS-002 top and bottom navigation stay in sync',async({page})=>{
  await expect(page.locator('#nextTop')).toBeDisabled();
  await expect(page.locator('#next')).toBeDisabled();
 });
+test('SPEC-QUIZ-001 mobile: ten answers give 100 points and retry resets',async({page})=>{
+ await page.goto('/quiz/');
+ await expect(page.getByRole('heading',{name:/100てん チャレンジ/})).toBeVisible();
+ const answers=[2,1,0,1,1,0,2,0,1,2];
+ for(let i=0;i<10;i++){
+  await expect(page.locator('#next')).toBeDisabled();
+  await page.locator('#answers button').nth(answers[i]).click();
+  await page.locator('#next').click();
+  await expect(page.locator('#feedback')).toContainText('せいかい');
+  await page.locator('#next').click();
+ }
+ await expect(page.locator('#score')).toHaveText('100 / 100てん');
+ await page.locator('#retry').click();
+ await expect(page.locator('#progress')).toContainText('だい 1もん');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
