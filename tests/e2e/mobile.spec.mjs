@@ -235,3 +235,9 @@ test('SPEC-HISTORY-SPAIN-001 silver mine locations and war dates in both languag
  await page.goto('/history/en/');
  for(const term of ['Potosí','Zacatecas','1568','1585','1557'])await expect(page.locator('body')).toContainText(term);
 });
+test('SPEC-HISTORY-DEBT-001 debt payment suspension explained in both languages',async({page})=>{
+ await page.goto('/history/');
+ await expect(page.locator('body')).toContainText('返済の時期や方法を話し合い直す');
+ await page.goto('/history/en/');
+ await expect(page.locator('body')).toContainText('negotiates new terms with its lenders');
+});
