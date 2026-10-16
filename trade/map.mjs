@@ -1,23 +1,24 @@
 import {PORTS,route} from './accounting.mjs';
 
-// Harbor anchors match the illustrated background in its 960 × 600 viewBox.
+// Anchors match the approved illustrated atlas, not a geographic projection.
 const ports={
- venice:{point:[426,94],label:[448,115],align:'start'},
- alexandria:{point:[774,535],label:[752,573],align:'end'},
- constantinople:{point:[764,225],label:[743,181],align:'end'},
- barcelona:{point:[184,211],label:[204,247],align:'start'}
+ venice:{point:[794,315],label:[816,332],align:'start',ship:[35,82],flag:[92,46],description:'水の都から、航海のはじまり。'},
+ alexandria:{point:[1038,744],label:[1010,752],align:'end',ship:[-75,-66],flag:[-130,-155],description:'海と陸の交易をつなぐ港。'},
+ constantinople:{point:[1086,472],label:[1110,512],align:'end',ship:[-55,100],flag:[-180,52],description:'東と西の文化が出会う港。'},
+ barcelona:{point:[482,429],label:[502,420],align:'start',ship:[73,54],flag:[132,25],description:'地中海の西にひらく、にぎやかな港。'}
 };
-// Schematic sea waypoints between the illustrated harbors.
 const legs=[
- ['venice','alexandria',[[465,150],[500,195],[535,245],[550,295],[555,350],[610,425],[714,465]]],
- ['alexandria','constantinople',[[803,458],[787,386],[736,338],[713,281],[732,251]]],
- ['constantinople','barcelona',[[732,251],[713,281],[712,340],[680,399],[596,410],[527,377],[465,355],[373,348],[284,297]]]
+ ['venice','alexandria',[[815,375],[849,442],[901,520],[949,605],[985,660]]],
+ ['alexandria','constantinople',[[1046,675],[1034,596],[1039,541]]],
+ ['constantinople','barcelona',[[1024,526],[957,566],[902,594],[823,576],[749,554],[665,541],[580,516],[519,477]]]
 ];
 const pointString=points=>points.map(p=>p.join(',')).join(' ');
+const names={pepper:'コショウ',silk:'絹織物',glass:'ガラス製品'};
 
 export function renderMap(state){
  const $=id=>document.getElementById(id);
  const sequence=route(state.voyage),current=sequence[state.stop];
+ const port=PORTS.find(p=>p.id===current),config=ports[current];
  $('routeLine').innerHTML=sequence.slice(0,-1).map((from,i)=>{
   const to=sequence[i+1];
   const leg=legs.find(([a,b])=>(a===from&&b===to)||(a===to&&b===from));
@@ -25,19 +26,46 @@ export function renderMap(state){
   const status=i<state.stop?'complete':i===state.stop?'next':'future';
   return '<polyline class="route-leg '+status+'" points="'+pointString([ports[from].point,...waypoints,ports[to].point])+'"/>';
  }).join('');
- // Names are trusted constants; only the current port changes with game state.
+ // Names, descriptions and prices come from trusted game constants.
  $('portDots').innerHTML=PORTS.map(p=>{
   const {point:[x,y],label:[lx,ly],align}=ports[p.id],selected=p.id===current;
-  return '<g data-port="'+p.id+'"><circle cx="'+x+'" cy="'+y+'" r="7" class="port-dot'+(selected?' active':'')+'"/><text x="'+lx+'" y="'+ly+'" text-anchor="'+align+'" class="map-city'+(selected?' active':'')+'">'+p.name+'</text></g>';
+  return '<g data-port="'+p.id+'"><circle cx="'+x+'" cy="'+y+'" r="12" class="port-dot'+(selected?' active':'')+'"/><text x="'+lx+'" y="'+ly+'" text-anchor="'+align+'" class="map-city'+(selected?' active':'')+'">'+p.name+'</text></g>';
  }).join('');
- const [x,y]=ports[current].point,name=PORTS.find(p=>p.id===current).name;
+ const [x,y]=config.point,[sx,sy]=config.ship,[fx,fy]=config.flag;
  $('shipMarker').setAttribute('transform','translate('+x+' '+y+')');
  $('shipMarker').setAttribute('data-port',current);
- $('shipTitle').textContent='現在地の船：'+name;
- $('voyageMap').setAttribute('aria-label','地中海の航海地図。現在地：'+name+'。航海順：'+sequence.map(id=>PORTS.find(p=>p.id===id).name).join('、'));
- $('mapLocation').textContent='⛵ 現在地：'+name+' ／ 第'+state.voyage+'航海（'+(state.voyage%2?'往路':'復路')+'）';
+ $('shipHarborLink').setAttribute('d','M0 0L'+sx+' '+sy);
+ $('shipSprite').setAttribute('x',sx-56);
+ $('shipSprite').setAttribute('y',sy-56);
+ $('shipFlag').setAttribute('transform','translate('+fx+' '+fy+')');
+ $('shipTitle').textContent='現在地の船：'+port.name;
+ $('mapCurrentText').textContent='現在地：'+port.name;
+ $('mapCurrentText').setAttribute('font-size',port.name.length>9?'16':'20');
+ $('voyageMap').setAttribute('aria-label','4つの港をめぐる交易の旅。現在地：'+port.name+'。航海順：'+sequence.map(id=>PORTS.find(p=>p.id===id).name).join('、'));
+ $('mapLocation').textContent='⛵ 現在地：'+port.name+' ／ 第'+state.voyage+'航海（'+(state.voyage%2?'往路':'復路')+'）';
+ $('mapPortName').textContent=port.name;
+ $('mapPortDescription').textContent=config.description;
+ $('mapPortPrices').innerHTML=Object.entries(names).map(([good,name])=>'<div><dt>'+name+'</dt><dd>'+port.prices[good]+'<small> 金貨</small></dd></div>').join('');
  $('routeSteps').innerHTML=sequence.map((id,i)=>{
   const selected=id===current;
   return '<li class="map-step'+(selected?' current':'')+(i<state.stop?' visited':'')+'"'+(selected?' aria-current="location"':'')+'><span class="step-number" aria-hidden="true">'+(i<state.stop?'✓':i+1)+'</span><span>'+PORTS.find(p=>p.id===id).name+(selected?'<small>現在地</small>':'')+'</span></li>';
  }).join('');
+ if($('mapViewport').classList.contains('zoomed'))centerShip();
 }
+
+function centerShip(){
+ const viewport=document.getElementById('mapViewport');
+ const scale=document.getElementById('voyageMap').getBoundingClientRect().width/1536;
+ const marker=document.getElementById('shipMarker');
+ const {point:[x,y],ship:[sx,sy]}=ports[marker.dataset.port];
+ viewport.scrollTo({left:Math.max(0,(x+sx)*scale-viewport.clientWidth/2),top:Math.max(0,(y+sy)*scale-viewport.clientHeight/2)});
+}
+
+document.getElementById('mapZoom').addEventListener('click',()=>{
+ const viewport=document.getElementById('mapViewport');
+ const zoomed=viewport.classList.toggle('zoomed');
+ const button=document.getElementById('mapZoom');
+ button.setAttribute('aria-pressed',String(zoomed));
+ button.textContent=zoomed?'全体を見る':'地図の文字を拡大';
+ if(zoomed)centerShip();else viewport.scrollTo({left:0,top:0});
+});

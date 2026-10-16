@@ -50,8 +50,8 @@ test('TRADE-UI-004: illustrated map tracks every outward and return port, reload
  page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/trade/');
  await page.getByRole('button',{name:'スキップ'}).click();
- await expect(page.locator('#mapIllustration')).toHaveAttribute('href','./assets/mediterranean-map.webp');
- const illustration=await page.request.get('/trade/assets/mediterranean-map.webp');
+ await expect(page.locator('#mapIllustration')).toHaveAttribute('href','./assets/trade-atlas.webp');
+ const illustration=await page.request.get('/trade/assets/trade-atlas.webp');
  expect(illustration.ok()).toBe(true);
  const imageSize=await page.evaluate(async()=>{const image=new Image();image.src=document.querySelector('#mapIllustration').href.baseVal;await image.decode();return [image.naturalWidth,image.naturalHeight];});
  expect(imageSize[0]).toBeGreaterThan(1000);
@@ -62,6 +62,11 @@ test('TRADE-UI-004: illustrated map tracks every outward and return port, reload
   await expect(page.locator('#shipMarker')).toHaveCount(1);
   await expect(page.locator('#shipMarker')).toHaveAttribute('data-port',id);
   await expect(page.locator('#shipTitle')).toHaveText('現在地の船：'+name);
+  await expect(page.locator('#mapCurrentText')).toHaveText('現在地：'+name);
+  await expect(page.locator('#shipFlag')).toHaveText('現在地');
+  await expect(page.locator('#mapPortName')).toHaveText(name);
+  const prices={venice:[9,10,5],alexandria:[5,8,8],constantinople:[8,6,10],barcelona:[12,11,8]};
+  expect((await page.locator('#mapPortPrices dd').allTextContents()).map(text=>Number(text.replace(' 金貨','')))).toEqual(prices[id]);
   await expect(page.locator('#voyageMap')).toHaveAttribute('aria-label',new RegExp('現在地：'+name));
   await expect(page.locator('#mapLocation')).toContainText('現在地：'+name);
   await expect(page.locator('#routeSteps [aria-current="location"]')).toHaveCount(1);
@@ -75,6 +80,11 @@ test('TRADE-UI-004: illustrated map tracks every outward and return port, reload
   expect(ship.y).toBeGreaterThanOrEqual(frame.y);
   expect(ship.x+ship.width).toBeLessThanOrEqual(frame.x+frame.width);
   expect(ship.y+ship.height).toBeLessThanOrEqual(frame.y+frame.height);
+  const mapText=await page.locator('#mapCurrentText').evaluate(el=>{const box=el.getBBox();return {x:box.x,y:box.y,right:box.x+box.width,bottom:box.y+box.height};});
+  expect(mapText.x).toBeGreaterThanOrEqual(675);
+  expect(mapText.right).toBeLessThanOrEqual(936);
+  expect(mapText.y).toBeGreaterThanOrEqual(947);
+  expect(mapText.bottom).toBeLessThanOrEqual(1002);
  }
  const outward=[['venice','ヴェネツィア'],['alexandria','アレクサンドリア'],['constantinople','コンスタンティノープル'],['barcelona','バルセロナ']];
  await checkPort(...outward[0]);
@@ -119,3 +129,26 @@ for(const width of [320,390,1024]){
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  });
 }
+
+test('TRADE-UI-006: atlas zoom keeps the moving ship visible and restores overview',async({page})=>{
+ await page.setViewportSize({width:390,height:900});
+ await page.goto('/trade/');
+ await page.getByRole('button',{name:'スキップ'}).click();
+ await page.locator('#mapZoom').click();
+ await expect(page.locator('#mapZoom')).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('#mapZoom')).toHaveText('全体を見る');
+ expect(await page.locator('#mapViewport').evaluate(el=>el.scrollWidth>el.clientWidth)).toBe(true);
+ async function shipInsideScrollFrame(){
+  const within=await page.evaluate(()=>{const f=document.querySelector('#mapViewport').getBoundingClientRect(),s=document.querySelector('#shipSprite').getBoundingClientRect();return s.left>=f.left&&s.right<=f.right&&s.top>=f.top&&s.bottom<=f.bottom;});
+  expect(within).toBe(true);
+ }
+ await shipInsideScrollFrame();
+ await page.locator('#checkSail').click();
+ await page.locator('#sailPreview #accept').click();
+ await expect(page.locator('#mapCurrentText')).toHaveText('現在地：アレクサンドリア');
+ await shipInsideScrollFrame();
+ await page.locator('#mapZoom').click();
+ await expect(page.locator('#mapZoom')).toHaveAttribute('aria-pressed','false');
+ expect(await page.locator('#mapViewport').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
