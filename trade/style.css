@@ -17,3 +17,14 @@
 .balance-side .statement-row strong{margin-left:auto}
 .balance-check{text-align:center;font-weight:700;color:#126a4d;background:#e6f6ed;border-radius:9px;padding:10px}
 @media(max-width:390px){.statement{padding:10px}.balance-columns{gap:7px}.balance-side{padding:7px}.balance-side .statement-row{font-size:.76rem}.balance-side h4{font-size:.78rem}}
+
+.route-map{padding:14px;margin-top:12px}
+.route-map h2{margin-bottom:2px}
+.map-frame{overflow:hidden;border-radius:12px;border:1px solid #a7ced0;background:#91cad4}
+.map-frame svg{display:block;width:100%;height:auto}
+.map-region{font-size:17px;fill:#4c6c5d;font-weight:700;opacity:.8}
+.map-sea{font-size:25px;fill:#165c78;font-weight:700;opacity:.8}
+.map-city{font-family:system-ui,sans-serif;font-size:16px;font-weight:750;fill:#193e4c;paint-order:stroke;stroke:#f4f6e7;stroke-width:4px;stroke-linejoin:round}
+.map-city.active{fill:#a84d26;font-weight:900}
+.map-location{margin:8px 0 0;padding:8px 10px;background:#e8f4ef;border-radius:8px;font-weight:750}
+@media(max-width:430px){.map-city{font-size:18px}.map-region{font-size:20px}.map-sea{font-size:27px}}
