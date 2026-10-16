@@ -87,6 +87,17 @@ test('SPEC-NAV-001 related game link is below main learning sections',async({pag
  await expect(page.getByRole('link',{name:/English version/}).first()).toHaveAttribute('href','./en/');
 });
 
+test('SPEC-NAV-002 English related links sit below the statements at the end of the page',async({page})=>{
+ await page.goto('/en/');
+ const section=page.locator('.related-games');
+ await expect(section.getByRole('link',{name:/Lemonade Stand lesson/})).toBeVisible();
+ await expect(section.getByRole('link',{name:/History of Bookkeeping/})).toBeVisible();
+ await expect(section.getByRole('link',{name:/Merchant Challenge/})).toBeVisible();
+ await expect(section.getByRole('link',{name:/Free Trading Mode/})).toBeVisible();
+ await expect(page.locator('main > section').first().getByRole('link')).toHaveCount(0);
+ const positions=await page.evaluate(()=>({links:document.querySelector('.related-games').getBoundingClientRect().top,report:document.querySelector('#report').getBoundingClientRect().top}));
+ expect(positions.links).toBeGreaterThan(positions.report);
+});
 test('SPEC-KIDS-001 both easy Japanese versions work on mobile',async({page})=>{
  await page.goto('/kids/');
  await expect(page.getByRole('heading',{name:/こしょうやさん/})).toBeVisible();
