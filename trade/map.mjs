@@ -13,6 +13,7 @@ const legs=[
  ['constantinople','barcelona',[[1024,526],[957,566],[902,594],[823,576],[749,554],[665,541],[580,516],[519,477]]]
 ];
 const pointString=points=>points.map(p=>p.join(',')).join(' ');
+const icons={pepper:'🧺',silk:'🧵',glass:'🏺'};
 
 // Japanese is the default; the English page overrides these with configureMap().
 const japanese={
@@ -63,7 +64,7 @@ export function renderMap(state){
  $('mapLocation').textContent=labels.location(name,state.voyage);
  $('mapPortName').textContent=name;
  $('mapPortDescription').textContent=labels.descriptions[current];
- $('mapPortPrices').innerHTML=Object.entries(labels.goods).map(([good,label])=>'<div><dt>'+label+'</dt><dd>'+port.prices[good]+'<small>'+labels.coinUnit+'</small></dd></div>').join('');
+ $('mapPortPrices').innerHTML=Object.entries(labels.goods).map(([good,label])=>'<div><dt><span class="map-good-icon" aria-hidden="true">'+icons[good]+'</span>'+label+'</dt><dd>'+port.prices[good]+'<small>'+labels.coinUnit+'</small></dd></div>').join('');
  $('routeSteps').innerHTML=sequence.map((id,i)=>{
   const selected=id===current;
   return '<li class="map-step'+(selected?' current':'')+(i<state.stop?' visited':'')+'"'+(selected?' aria-current="location"':'')+'><span class="step-number" aria-hidden="true">'+(i<state.stop?'✓':i+1)+'</span><span>'+nameOf(id)+(selected?'<small>'+labels.stepCurrent+'</small>':'')+'</span></li>';

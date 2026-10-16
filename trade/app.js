@@ -1,4 +1,4 @@
-import {renderMap} from './map.mjs?v=20261016-en1';
+import {renderMap} from './map.mjs?v=20261016-icons1';
 import {PORTS,GOODS,CAPACITY,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from './accounting.mjs';
 const KEY='voyage-trade-v1',GUIDE='voyage-trade-guide-v1';
 const names={pepper:'コショウ',silk:'絹織物',glass:'ガラス製品'};

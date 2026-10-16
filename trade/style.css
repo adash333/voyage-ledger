@@ -46,7 +46,7 @@
 .current-port-detail p{font-size:.76rem;margin:3px 0 0;color:#6b604d}
 .map-market{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:5px 0 0}
 .map-market div{background:#f0e8d4;border-radius:6px;padding:5px;text-align:center}
-.map-market dt{font-size:.66rem;color:#6a5d48}
+.map-market dt{font-size:.66rem;color:#6a5d48}.map-good-icon{display:block;font-size:1.25rem;line-height:1.2;margin-bottom:1px}
 .map-market dd{margin:0;font-size:1.05rem;font-weight:750;color:#6b3b1e}
 .map-market-caption{font-size:.68rem!important}
 .map-market dd small{font-weight:400}

@@ -1,4 +1,4 @@
-import {renderMap,configureMap} from '../map.mjs?v=20261016-en1';
+import {renderMap,configureMap} from '../map.mjs?v=20261016-icons1';
 import {PORTS,GOODS,CAPACITY,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from '../accounting.mjs';
 // English UI for the free trading mode. Shares the accounting engine, the map module and the save key with the Japanese page.
 const KEY='voyage-trade-v1',GUIDE='voyage-trade-guide-v1';

@@ -12,6 +12,7 @@ test('TRADE-EN-001: English trade preview, commit, journal and statements on mob
  await expect(page.locator('#shipTitle')).toHaveText('Your ship at Venice');
  await expect(page.locator('#mapPortName')).toHaveText('Venice');
  await expect(page.locator('#mapPortPrices')).toContainText('Pepper');
+ await expect(page.locator('#mapPortPrices .map-good-icon')).toHaveText(['🧺','🧵','🏺']);
  await expect(page.locator('#routeSteps [aria-current="location"]')).toContainText('Venice');
  await page.locator('#qty').fill('20');
  await page.locator('#checkTrade').click();

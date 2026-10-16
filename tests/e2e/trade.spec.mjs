@@ -144,6 +144,7 @@ test('TRADE-UI-004: illustrated map tracks every outward and return port, reload
   await expect(page.locator('#mapPortName')).toHaveText(name);
   const prices={venice:[9,10,5],alexandria:[5,8,8],constantinople:[8,6,10],barcelona:[12,11,8]};
   expect((await page.locator('#mapPortPrices dd').allTextContents()).map(text=>Number(text.replace(' 金貨','')))).toEqual(prices[id]);
+  await expect(page.locator('#mapPortPrices .map-good-icon')).toHaveText(['🧺','🧵','🏺']);
   await expect(page.locator('#voyageMap')).toHaveAttribute('aria-label',new RegExp('現在地：'+name));
   await expect(page.locator('#mapLocation')).toContainText('現在地：'+name);
   await expect(page.locator('#routeSteps [aria-current="location"]')).toHaveCount(1);
