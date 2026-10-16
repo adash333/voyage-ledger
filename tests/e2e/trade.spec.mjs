@@ -42,3 +42,21 @@ test('TRADE-UI-003: P/L and B/S separated and balance on mobile',async({page})=>
  await expect(page.locator('.balance-check')).toContainText('一致しています');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+
+test('TRADE-UI-004: map shows four cities and ship follows voyage',async({page})=>{
+ await page.goto('/trade/');
+ const skip=page.getByRole('button',{name:'スキップ'});
+ if(await skip.isVisible())await skip.click();
+ await expect(page.locator('#voyageMap')).toBeVisible();
+ await expect(page.locator('#portDots .map-city')).toHaveCount(4);
+ await expect(page.locator('#mapLocation')).toContainText('ヴェネツィア');
+ const initial=await page.locator('#shipMarker').getAttribute('transform');
+ await page.locator('#checkSail').click();
+ await page.locator('#sailPreview #accept').click();
+ await expect(page.locator('#mapLocation')).toContainText('アレクサンドリア');
+ expect(await page.locator('#shipMarker').getAttribute('transform')).not.toBe(initial);
+ await page.locator('#tab-report').click();
+ await expect(page.getByRole('heading',{name:/損益計算書（P\/L）/})).toBeVisible();
+ await expect(page.getByRole('heading',{name:/貸借対照表（B\/S）/})).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
