@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-const PAGES=['/','/en/','/kids/','/history/','/history/en/','/quiz/','/quiz/en/','/lemonade/','/lemonade/en/','/lemonade/kids/','/lemonade/quiz/','/trade/'];
+const PAGES=['/','/en/','/kids/','/history/','/history/en/','/quiz/','/quiz/en/','/lemonade/','/lemonade/en/','/lemonade/kids/','/lemonade/quiz/','/trade/','/trade/en/'];
 for(const path of PAGES){
  test('SPEC-FAVICON-001 '+path+' declares icons that load without 404',async({page,request})=>{
   const failed=[];
