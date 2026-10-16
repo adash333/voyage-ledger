@@ -1,4 +1,81 @@
 import {test,expect} from '@playwright/test';
+
+test('TRADE-QUANTITY-001: oversized Alexandria order explains capacity next to input without changing saved data',async({page})=>{
+ await page.goto('/trade/');await page.getByRole('button',{name:'スキップ'}).click();
+ await page.locator('#checkSail').click();await page.locator('#sailPreview #accept').click();
+ const saved=await page.evaluate(()=>localStorage.getItem('voyage-trade-v1'));
+ await page.getByLabel('数量',{exact:true}).fill('20');
+ await page.locator('#checkTrade').click();
+ await expect(page.locator('#qtyError')).toBeVisible();
+ await expect(page.locator('#qtyError')).toContainText('全商品合計で10個');
+ await expect(page.locator('#qtyHint')).toContainText('最大10個');
+ await expect(page.locator('#qty')).toBeFocused();
+ await expect(page.locator('#qty')).toHaveValue('20');
+ await expect(page.locator('#tradePreview')).toBeHidden();
+ await expect(page.locator('#message')).not.toContainText('Ship full');
+ expect(await page.evaluate(()=>localStorage.getItem('voyage-trade-v1'))).toBe(saved);
+ await page.locator('#qty').fill('10');await page.locator('#checkTrade').click();
+ await expect(page.locator('#qtyError')).toBeHidden();
+ await expect(page.locator('#tradePreview')).toContainText('金貨50枚');
+ await page.locator('#tradePreview #accept').click();
+ await expect(page.locator('#summary')).toContainText('金貨45枚');
+ await expect(page.locator('#summary')).toContainText('積載 10 / 10');
+ await page.reload();await expect(page.locator('#holding')).toContainText('コショウ 10');
+});
+
+test('TRADE-QUANTITY-002: small step buttons respect limits and discard a stale confirmation',async({page})=>{
+ await page.setViewportSize({width:320,height:900});
+ await page.goto('/trade/');await page.getByRole('button',{name:'スキップ'}).click();
+ const less=page.getByRole('button',{name:'数量を1減らす'}),more=page.getByRole('button',{name:'数量を1増やす'});
+ await expect(less).toBeDisabled();
+ await more.click();await expect(page.locator('#qty')).toHaveValue('2');
+ await page.locator('#checkTrade').click();await expect(page.locator('#tradePreview')).toBeVisible();
+ await more.click();await expect(page.locator('#qty')).toHaveValue('3');
+ await expect(page.locator('#tradePreview')).toBeHidden();
+ await less.click();await expect(page.locator('#qty')).toHaveValue('2');
+ await page.locator('#qty').fill('10');await expect(more).toBeDisabled();
+ await less.click();await expect(page.locator('#qty')).toHaveValue('9');
+ await page.locator('#checkTrade').click();
+ await page.locator('#qty').fill('8');await expect(page.locator('#tradePreview')).toBeHidden();
+ for(const button of [less,more]){
+  const box=await button.boundingBox();expect(box.width).toBeGreaterThanOrEqual(44);expect(box.height).toBeGreaterThanOrEqual(44);
+ }
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('TRADE-QUANTITY-003: limits update with cash, combined cargo and selected sell inventory',async({page})=>{
+ await page.goto('/trade/');await page.getByRole('button',{name:'スキップ'}).click();
+ async function buy(good,qty){await page.locator('#good').selectOption(good);await page.locator('#qty').fill(String(qty));await page.locator('#checkTrade').click();await page.locator('#tradePreview #accept').click();}
+ await buy('silk',9);
+ await page.locator('#good').selectOption('glass');
+ await expect(page.locator('#qtyHint')).toContainText('最大1個（積載の空き 1個');
+ await page.locator('#qty').fill('1');await buy('glass',1);
+ await expect(page.locator('#qtyHint')).toContainText('最大0個');
+ await expect(page.locator('#qtyIncrease')).toBeDisabled();
+ await page.locator('#kind').selectOption('sell');
+ await expect(page.locator('#qtyHint')).toContainText('最大1個');
+ await page.locator('#qty').fill('2');await page.locator('#checkTrade').click();
+ await expect(page.locator('#qtyError')).toContainText('在庫は1個');
+ await page.locator('#qty').fill('1');await page.locator('#checkTrade').click();await page.locator('#tradePreview #accept').click();
+ await page.locator('#good').selectOption('silk');await expect(page.locator('#qtyHint')).toContainText('最大9個');
+ await page.locator('#kind').selectOption('buy');
+ await page.locator('#checkSail').click();await page.locator('#sailPreview #accept').click();
+ await expect(page.locator('#qtyHint')).toContainText('最大0個（積載の空き 1個');
+ await page.locator('#checkTrade').click();await expect(page.locator('#qtyError')).toContainText('現金が足りません');
+ await expect(page.locator('#tradePreview')).toBeHidden();
+});
+
+test('TRADE-QUANTITY-004: empty, zero and fractional quantities have a nearby Japanese error',async({page})=>{
+ await page.goto('/trade/');await page.getByRole('button',{name:'スキップ'}).click();
+ for(const value of ['', '0', '-1', '1.5']){
+  await page.locator('#qty').fill(value);await page.locator('#checkTrade').click();
+  await expect(page.locator('#qtyError')).toHaveText('数量は1以上の整数で入力してください。');
+  await expect(page.locator('#qty')).toHaveAttribute('aria-invalid','true');
+  await expect(page.locator('#tradePreview')).toBeHidden();
+ }
+ await page.locator('#qtyIncrease').click();await expect(page.locator('#qty')).toHaveValue('1');
+ await expect(page.locator('#qtyError')).toBeHidden();
+});
 test('TRADE-UI-001: mobile trade preview, commit, journal and report',async({page})=>{
  await page.goto('/trade/');
  await expect(page.getByRole('heading',{name:/自由経営モード/})).toBeVisible();
