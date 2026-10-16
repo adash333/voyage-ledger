@@ -19,8 +19,26 @@ function begin(kind){try{pending=kind==='sail'?{kind:'sail'}:{kind:$('kind').val
 $('checkTrade').addEventListener('click',()=>begin('trade'));
 $('checkSail').addEventListener('click',()=>begin('sail'));
 for(const id of ['kind','good','qty'])$(id).addEventListener('change',()=>{pending=null;$('tradePreview').hidden=true;});
+const mapPositions={venice:[266,31],alexandria:[618,316],constantinople:[600,120],barcelona:[63,112]};
+function renderMap(){
+ const sequence=route(state.voyage),current=sequence[state.stop];
+ const points=sequence.map(id=>mapPositions[id].join(',')).join(' ');
+ $('routeLine').setAttribute('points',points);
+ $('portDots').innerHTML=PORTS.map(p=>{
+  const [x,y]=mapPositions[p.id],selected=p.id===current;
+  const align=p.id==='alexandria'?'end':p.id==='constantinople'?'end':'start';
+  const dx=align==='end'?-13:13;
+  const dy=p.id==='venice'?32:p.id==='alexandria'?-14:p.id==='constantinople'?-17:28;
+  return '<g><circle cx="'+x+'" cy="'+y+'" r="'+(selected?9:7)+'" fill="'+(selected?'#d7652c':'#1c5264')+'" stroke="white" stroke-width="3"/><text x="'+(x+dx)+'" y="'+(y+dy)+'" text-anchor="'+align+'" class="map-city'+(selected?' active':'')+'">'+escapeHTML(p.name)+'</text></g>';
+ }).join('');
+ const [x,y]=mapPositions[current];
+ $('shipMarker').setAttribute('transform','translate('+x+' '+(y-30)+')');
+ $('mapLocation').textContent='⛵ 現在地：'+PORTS.find(p=>p.id===current).name+' ／ 第'+state.voyage+'航海（'+(state.voyage%2?'往路':'復路')+'）';
+}
+
 function render(){
  const r=report(state),port=portAt(state);
+ renderMap();
  $('summary').innerHTML='<span>第'+state.voyage+'航海・'+(state.voyage%2?'往路':'復路')+'</span><span>'+escapeHTML(port.name)+'</span><span>🪙 '+money(r.cash)+'</span><span>📦 積載 '+r.load+' / 10</span>';
  $('prices').querySelector('tbody').innerHTML=PORTS.map(p=>'<tr class="'+(p.id===port.id?'current':'')+'"><td>'+escapeHTML(p.name)+'</td>'+GOODS.map(g=>'<td>'+p.prices[g]+'</td>').join('')+'</tr>').join('');
  $('holding').textContent='いまの在庫：'+GOODS.map(g=>names[g]+' '+r.inventory[g].qty).join(' ／ ');
