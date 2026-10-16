@@ -14,7 +14,9 @@ test('TRADE-UI-001: mobile trade preview, commit, journal and report',async({pag
  await page.locator('#tab-journal').click();
  await expect(page.locator('#journal')).toContainText('商品');
  await page.locator('#tab-report').click();
- await expect(page.locator('#report')).toContainText('総資産');
+ await expect(page.locator('#report')).toContainText('資産合計');
+ await expect(page.locator('.asset-side')).toContainText('ガラス製品（3個）');
+ await expect(page.locator('.asset-side')).toContainText('金貨15枚');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 test('TRADE-UI-002: sail preview, departure and reload persistence',async({page})=>{

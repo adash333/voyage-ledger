@@ -49,7 +49,6 @@ function render(){
  $('specialBtn').hidden=!canSpecialClose(state);
  $('journal').innerHTML=r.journal.map((j,i)=>'<div class="journal-entry"><strong>'+(i+1)+'. '+(j.voyage?'第'+j.voyage+'航海':'商会設立')+'</strong>'+entriesHTML([j])+'<details><summary>なぜ？ 詳しく見る</summary><p>借方と貸方に同じ金額を記録しています。</p></details></div>').join('');
  const row=(label,value)=>'<div class="statement-row"><span>'+escapeHTML(label)+'</span><strong>'+money(value)+'</strong></div>';
- const inventoryCost=r.assets-r.cash;
  const assets=row('現金',r.cash)+GOODS.map(g=>row(names[g]+'（'+r.inventory[g].qty+'個）',r.inventory[g].cost)).join('');
  const equity=row('資本金（最初の元手）',r.capital)+row('累積利益',r.profit);
  $('report').innerHTML=
