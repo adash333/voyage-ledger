@@ -1,5 +1,6 @@
-import {PORTS,GOODS,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from '../accounting.mjs';
-// English UI for the free trading mode. Shares the accounting engine and the save key with the Japanese page.
+import {renderMap,configureMap} from '../map.mjs?v=20261016-en1';
+import {PORTS,GOODS,CAPACITY,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from '../accounting.mjs';
+// English UI for the free trading mode. Shares the accounting engine, the map module and the save key with the Japanese page.
 const KEY='voyage-trade-v1',GUIDE='voyage-trade-guide-v1';
 const names={pepper:'Pepper',silk:'Silk',glass:'Glassware'};
 const units={pepper:'bags',silk:'bolts',glass:'pieces'};
@@ -7,14 +8,53 @@ const portNames={venice:'Venice',alexandria:'Alexandria',constantinople:'Constan
 const accounts={'現金':'Cash','資本金':'Capital','商品':'Merchandise','売上':'Sales','売上原価':'Cost of goods sold','航海費':'Voyage expenses'};
 const account=label=>accounts[label]||label;
 const portName=id=>portNames[id]||id;
+const direction=v=>v%2?'outbound':'return';
+configureMap({
+ portName:port=>portName(port.id),
+ descriptions:{venice:'The voyage begins in the city of canals.',alexandria:'A port that links trade by sea and by land.',constantinople:'A port where East and West meet.',barcelona:'A busy port open to the western Mediterranean.'},
+ goods:names,
+ coinUnit:' coins',
+ shipTitle:name=>'Your ship at '+name,
+ currentText:name=>'Now at: '+name,
+ mapAria:(name,list)=>'A trading voyage around four ports. Current port: '+name+'. Route: '+list.join(', '),
+ location:(name,voyage)=>'⛵ Current port: '+name+' / Voyage '+voyage+' ('+direction(voyage)+')',
+ stepCurrent:'Here',
+ zoomIn:'Enlarge map text',
+ zoomOut:'Show whole map'
+});
 const $=id=>document.getElementById(id);
 let state=initialState(),pending=null,tab='trade',guideIndex=0;
 try{const raw=localStorage.getItem(KEY);if(raw)state=restore(JSON.parse(raw));}catch(e){$('message').textContent='Could not load the saved data. Starting a new voyage.';}
 const money=n=>n.toLocaleString('en-US')+(n===1?' gold coin':' gold coins');
-const direction=v=>v%2?'outbound':'return';
 const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
 const escapeHTML=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function note(text){$('message').textContent=text;}
+function tradeQuantity(){
+ const r=report(state),good=$('good').value,buy=$('kind').value==='buy',qty=Number($('qty').value);
+ const space=CAPACITY-r.load,price=portAt(state).prices[good],affordable=Math.floor(r.cash/price);
+ const max=buy?Math.min(space,affordable):r.inventory[good].qty;
+ let error='';
+ if(!Number.isSafeInteger(qty)||qty<1)error='Enter a whole number of 1 or more.';
+ else if(buy&&qty>space)error='The ship carries up to '+CAPACITY+' units in total. There is room for '+space+' more. Reduce the quantity or sell some goods first.';
+ else if(buy&&qty>affordable)error='Not enough cash. This quantity costs '+money(qty*price)+'. You can buy up to '+max+' right now.';
+ else if(!buy&&qty>max)error='You have '+max+' '+units[good]+' of '+names[good]+'. You can sell up to that amount.';
+ return {qty,max,error,hint:buy?'You can buy up to '+max+' now (cargo space '+space+' / affordable '+affordable+')':'You can sell up to '+max+' now ('+names[good]+' in stock)'};
+}
+function updateQuantity(){
+ const q=tradeQuantity(),active=state.status==='active';
+ $('qtyHint').textContent=q.hint;
+ $('qty').max=String(q.max);
+ $('qty').setAttribute('aria-invalid',String(active&&Boolean(q.error)));
+ $('qtyError').textContent=active?q.error:'';
+ $('qtyError').hidden=!active||!q.error;
+ $('qtyDecrease').disabled=!active||q.qty<=1;
+ $('qtyIncrease').disabled=!active||q.max<1||q.qty>=q.max;
+ for(const id of ['kind','good','qty'])$(id).disabled=!active;
+ return q;
+}
+function clearPreviews(){pending=null;$('tradePreview').hidden=true;$('sailPreview').hidden=true;}
+function quantityChanged(){clearPreviews();updateQuantity();}
+function readableError(e){return ({'Insufficient cash':'Not enough cash. Reduce the quantity.','Ship full':'The ship carries up to '+CAPACITY+' units in total.','Insufficient inventory':'Not enough stock. Reduce the quantity to sell.','Invalid nonnegative integer':'Enter a whole number of 1 or more.','Insufficient fare':'Not enough cash to pay the fare.','Voyage is closed':'This voyage has ended.','Last port':'This port is the final stop of this voyage.'})[e.message]||e.message;}
 function switchTab(to){tab=to;for(const t of ['trade','journal','report']){$('panel-'+t).hidden=t!==to;$('tab-'+t).setAttribute('aria-selected',String(t===to));$('tab-'+t).tabIndex=t===to?0:-1;} }
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
 document.querySelector('.tabs').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;const a=['trade','journal','report'],next=a[(a.indexOf(tab)+(e.key==='ArrowRight'?1:2))%3];switchTab(next);$('tab-'+next).focus();e.preventDefault();});
@@ -22,33 +62,23 @@ function entriesHTML(entries){return entries.map(e=>'<div class="entries"><div><
 function explain(p){if(p.kind==='buy')return money(p.amount)+' of cash became '+names[p.good]+'. Profit does not change yet.';if(p.kind==='sail')return 'Sailing to the next port costs '+money(FARE)+'. Voyage expenses are subtracted from profit.';return 'You sold '+names[p.good]+'. Sales of '+money(p.amount)+' minus the purchase cost of '+money(p.cost)+' gives a gross profit of '+money(p.profit)+' on this trade.';}
 function detailed(p){return p.kind==='buy'?'The asset Cash goes down and the asset Merchandise goes up by the same amount.':p.kind==='sail'?'The debit is Voyage expenses and the credit is Cash. The fare you paid appears on the income statement.':'Sales and the cost of the goods you bought earlier are recorded separately. Under first-in, first-out (FIFO), the oldest stock is sold first.';}
 function showPreview(p,target){const area=$(target);area.hidden=false;area.innerHTML='<h3>📖 Journal preview</h3><p>'+escapeHTML(explain(p))+'</p>'+entriesHTML(p.entries)+'<p>Once confirmed, a trade or departure cannot be undone.</p><details><summary>Why? Learn more</summary><p>'+escapeHTML(detailed(p))+'</p></details><div class="actions"><button id="accept">Confirm</button><button id="cancel" class="light">Go back and change</button></div>';area.querySelector('#accept').addEventListener('click',()=>{try{const action=pending;if(!action)return;const now=preview(state,action);if(JSON.stringify(now)!==JSON.stringify(p))throw new Error('The details changed. Please review again.');state=commit(state,{...action,id:'v'+state.voyage+'-e'+(state.events.length+1)});save();pending=null;area.hidden=true;note(explain(p));render();}catch(e){note(e.message);pending=null;area.hidden=true;}});area.querySelector('#cancel').addEventListener('click',()=>{pending=null;area.hidden=true;});}
-function begin(kind){try{pending=kind==='sail'?{kind:'sail'}:{kind:$('kind').value,good:$('good').value,qty:Number($('qty').value)};const p=preview(state,pending);showPreview(p,kind==='sail'?'sailPreview':'tradePreview');note('');}catch(e){pending=null;note('Cannot review: '+e.message);}}
+function begin(kind){clearPreviews();note('');if(kind!=='sail'&&updateQuantity().error){$('qty').focus();return;}try{pending=kind==='sail'?{kind:'sail'}:{kind:$('kind').value,good:$('good').value,qty:Number($('qty').value)};const p=preview(state,pending);showPreview(p,kind==='sail'?'sailPreview':'tradePreview');}catch(e){pending=null;note('Cannot review: '+readableError(e));}}
 $('checkTrade').addEventListener('click',()=>begin('trade'));
 $('checkSail').addEventListener('click',()=>begin('sail'));
-for(const id of ['kind','good','qty'])$(id).addEventListener('change',()=>{pending=null;$('tradePreview').hidden=true;});
-const mapPositions={venice:[266,31],alexandria:[618,316],constantinople:[600,120],barcelona:[63,112]};
-function renderMap(){
- const sequence=route(state.voyage),current=sequence[state.stop];
- const points=sequence.map(id=>mapPositions[id].join(',')).join(' ');
- $('routeLine').setAttribute('points',points);
- $('portDots').innerHTML=PORTS.map(p=>{
-  const [x,y]=mapPositions[p.id],selected=p.id===current;
-  const align=p.id==='alexandria'?'end':p.id==='constantinople'?'end':'start';
-  const dx=align==='end'?-13:13;
-  const dy=p.id==='venice'?32:p.id==='alexandria'?-14:p.id==='constantinople'?-17:28;
-  return '<g><circle cx="'+x+'" cy="'+y+'" r="'+(selected?9:7)+'" fill="'+(selected?'#d7652c':'#1c5264')+'" stroke="white" stroke-width="3"/><text x="'+(x+dx)+'" y="'+(y+dy)+'" text-anchor="'+align+'" class="map-city'+(selected?' active':'')+'">'+escapeHTML(portName(p.id))+'</text></g>';
- }).join('');
- const [x,y]=mapPositions[current];
- $('shipMarker').setAttribute('transform','translate('+x+' '+(y-30)+')');
- $('mapLocation').textContent='⛵ Current port: '+portName(current)+' / Voyage '+state.voyage+' ('+direction(state.voyage)+')';
-}
-
+for(const id of ['kind','good'])$(id).addEventListener('change',quantityChanged);
+$('qty').addEventListener('input',quantityChanged);
+for(const [id,step] of [['qtyDecrease',-1],['qtyIncrease',1]])$(id).addEventListener('click',()=>{
+ const value=Number($('qty').value);
+ $('qty').value=String(Number.isSafeInteger(value)&&value>=1?Math.max(1,value+step):1);
+ quantityChanged();
+});
 function render(){
  const r=report(state),port=portAt(state);
- renderMap();
- $('summary').innerHTML='<span>Voyage '+state.voyage+' · '+direction(state.voyage)+'</span><span>'+escapeHTML(portName(port.id))+'</span><span>🪙 '+money(r.cash)+'</span><span>📦 Cargo '+r.load+' / 10</span>';
+ renderMap(state);
+ $('summary').innerHTML='<span>Voyage '+state.voyage+' · '+direction(state.voyage)+'</span><span>'+escapeHTML(portName(port.id))+'</span><span>🪙 '+money(r.cash)+'</span><span>📦 Cargo '+r.load+' / '+CAPACITY+'</span>';
  $('prices').querySelector('tbody').innerHTML=PORTS.map(p=>'<tr class="'+(p.id===port.id?'current':'')+'"><td>'+escapeHTML(portName(p.id))+'</td>'+GOODS.map(g=>'<td>'+p.prices[g]+'</td>').join('')+'</tr>').join('');
  $('holding').textContent='Current stock: '+GOODS.map(g=>names[g]+' '+r.inventory[g].qty).join(' / ');
+ clearPreviews();updateQuantity();
  $('nextPort').textContent=state.stop===3?'This port is the final stop of this voyage.':'Next port: '+portName(route(state.voyage)[state.stop+1])+' (fare '+money(FARE)+')';
  $('checkTrade').hidden=state.status!=='active';$('checkSail').hidden=state.status!=='active'||state.stop===3;
  $('checkSail').disabled=r.cash<FARE;
