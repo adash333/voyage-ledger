@@ -24,10 +24,12 @@
 .route-map h2{margin:0;color:#3e493b;font-size:1.2rem}
 .map-badge{border:1px solid #deccaa;border-radius:20px;padding:4px 10px;color:#806039;font-size:.72rem;white-space:nowrap}
 .route-map .hint{margin:9px 0 12px}
-.map-frame{overflow:auto;overscroll-behavior:contain;border-radius:10px;border:2px solid #bda577;background:#9bc7cc;box-shadow:0 3px 12px #53452618}
+.map-frame{overflow:hidden;border-radius:10px;border:2px solid #bda577;background:#9bc7cc;box-shadow:0 3px 12px #53452618}
 .map-frame svg{display:block;width:100%;height:auto}
-.map-frame.zoomed{max-height:650px}
+/* Zoomed: pan sideways inside the frame; vertical swipes always scroll the page. */
+.map-frame.zoomed{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scrollbar-width:thin}
 .map-frame.zoomed svg{min-width:1536px}
+.route-map.zoomed .map-heading{position:sticky;top:0;z-index:3;background:#fffcf4;padding:6px 0;box-shadow:0 6px 8px -6px #53452640}
 #mapZoom{font-size:.75rem;padding:8px 10px;white-space:nowrap}
 .route-leg{fill:none;stroke:#fff8dc;stroke-width:3;stroke-dasharray:3 9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1px #285363)}
 .route-leg.complete{stroke:#f8d17b;stroke-dasharray:none;stroke-width:3;opacity:.9}
@@ -59,6 +61,6 @@
 .visited .step-number{background:#d9e9dc;color:#426e52}
 .map-step small{display:block;font-size:.65rem;color:#9a4a22}
 .map-caption{font-size:.68rem;color:#84765f;margin:10px 0 0}
-@media(max-width:430px){.route-map{padding:11px}.map-badge{display:none}.map-city{font-size:23px;stroke-width:6px}.current-port-detail{grid-template-columns:1fr;gap:8px;padding:10px}.map-frame.zoomed{max-height:480px}.route-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.map-location{font-size:.8rem;padding:8px}.map-eyebrow{font-size:.58rem}}
+@media(max-width:430px){.route-map{padding:11px}.map-badge{display:none}.map-city{font-size:23px;stroke-width:6px}.current-port-detail{grid-template-columns:1fr;gap:8px;padding:10px}.route-map.zoomed .map-heading{padding:4px 0}.route-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.map-location{font-size:.8rem;padding:8px}.map-eyebrow{font-size:.58rem}}
 
 .quantity-field{min-width:0}.quantity-control{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px;margin-top:5px}.quantity-control input{margin-top:0;text-align:center;font-variant-numeric:tabular-nums}.quantity-control button{padding:0;min-height:44px;font-size:1.2rem;border:1px solid #b7c8c9}.quantity-control input[aria-invalid=true]{border:2px solid #9c3d20}.quantity-error{color:#873414;background:#fff3e9;border-left:3px solid #b94e26;border-radius:5px;padding:9px 11px;font-size:.85rem;margin:8px 0}#qtyHint{margin:8px 0}

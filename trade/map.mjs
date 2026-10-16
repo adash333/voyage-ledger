@@ -72,19 +72,22 @@ export function renderMap(state){
  if($('mapViewport').classList.contains('zoomed'))centerShip();
 }
 
-function centerShip(){
+// Horizontal centering happens inside the frame; vertical position is left to the page scroll.
+function centerShip({page=false}={}){
  const viewport=document.getElementById('mapViewport');
  const scale=document.getElementById('voyageMap').getBoundingClientRect().width/1536;
  const marker=document.getElementById('shipMarker');
- const {point:[x,y],ship:[sx,sy]}=ports[marker.dataset.port];
- viewport.scrollTo({left:Math.max(0,(x+sx)*scale-viewport.clientWidth/2),top:Math.max(0,(y+sy)*scale-viewport.clientHeight/2)});
+ const {point:[x],ship:[sx]}=ports[marker.dataset.port];
+ viewport.scrollTo({left:Math.max(0,(x+sx)*scale-viewport.clientWidth/2)});
+ if(page){const r=document.getElementById('shipSprite').getBoundingClientRect();scrollBy({top:r.top+r.height/2-innerHeight/2,behavior:'smooth'});}
 }
 
 document.getElementById('mapZoom').addEventListener('click',()=>{
  const viewport=document.getElementById('mapViewport');
  const zoomed=viewport.classList.toggle('zoomed');
+ viewport.closest('.route-map').classList.toggle('zoomed',zoomed);
  const button=document.getElementById('mapZoom');
  button.setAttribute('aria-pressed',String(zoomed));
  button.textContent=zoomed?labels.zoomOut:labels.zoomIn;
- if(zoomed)centerShip();else viewport.scrollTo({left:0,top:0});
+ if(zoomed)centerShip({page:true});else{viewport.scrollTo({left:0});viewport.closest('.route-map').scrollIntoView({block:'start',behavior:'smooth'});}
 });

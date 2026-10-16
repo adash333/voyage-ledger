@@ -230,3 +230,38 @@ test('TRADE-UI-006: atlas zoom keeps the moving ship visible and restores overvi
  expect(await page.locator('#mapViewport').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+
+test('TRADE-UI-007: vertical swipes over the atlas scroll the page, zoomed or not',async({page,context})=>{
+ await page.setViewportSize({width:390,height:800});
+ await page.goto('/trade/');
+ await page.getByRole('button',{name:'スキップ'}).click();
+ const cdp=await context.newCDPSession(page);
+ async function swipeUpOverMap(){
+  await page.evaluate(()=>scrollTo(0,0));
+  const box=await page.locator('#mapViewport').boundingBox();
+  const x=box.x+box.width/2,y=Math.min(box.y+box.height/2,700);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
+  for(let i=1;i<=8;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-i*40}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await page.waitForTimeout(300);
+  return page.evaluate(()=>scrollY);
+ }
+ const frame=page.locator('#mapViewport');
+ expect(await frame.evaluate(el=>({y:getComputedStyle(el).overflowY,inner:el.scrollHeight<=el.clientHeight+1}))).toEqual({y:'hidden',inner:true});
+ expect(await swipeUpOverMap()).toBeGreaterThan(100);
+ await page.evaluate(()=>scrollTo(0,0));
+ await page.locator('#mapZoom').click();
+ await expect(page.locator('.route-map')).toHaveClass(/zoomed/);
+ // Zoomed: wider than the frame, but never taller, so the frame never traps vertical swipes.
+ expect(await frame.evaluate(el=>({wide:el.scrollWidth>el.clientWidth,inner:el.scrollHeight<=el.clientHeight+1,y:getComputedStyle(el).overflowY}))).toEqual({wide:true,inner:true,y:'hidden'});
+ expect(await swipeUpOverMap()).toBeGreaterThan(100);
+ // The zoom toggle stays reachable while the enlarged map scrolls through the page.
+ await page.evaluate(()=>{document.querySelector('#mapViewport').scrollIntoView({block:'center'});});
+ await page.waitForTimeout(200);
+ const button=await page.locator('#mapZoom').boundingBox();
+ expect(button.y).toBeGreaterThanOrEqual(0);
+ expect(button.y+button.height).toBeLessThanOrEqual(800);
+ await page.locator('#mapZoom').click();
+ await expect(page.locator('.route-map')).not.toHaveClass(/zoomed/);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
