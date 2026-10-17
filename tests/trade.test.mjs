@@ -106,3 +106,26 @@ test('TRADE-ENTRY: sale preview includes two balanced journal entries',()=>{
  assert.deepEqual(p.entries,[{debit:'現金',credit:'売上',amount:5},{debit:'売上原価',credit:'商品',amount:5}]);
  assert.equal(report(s).sales,0);
 });
+
+import {exportSave,parseSave,SAVE_APP} from '../trade/save.mjs';
+test('TRADE-SAVE-JSON: export wraps a verified state and import restores it',()=>{
+ let s=initialState();s=buy(s,'e1','glass',3);s=sail(s,'e2');
+ const {filename,json}=exportSave(s,new Date(2026,9,17,9,5));
+ assert.equal(filename,'voyage-trade-20261017-0905.json');
+ const data=JSON.parse(json);
+ assert.equal(data.app,SAVE_APP);assert.equal(data.format,1);
+ assert.deepEqual(data.state,s);
+ assert.deepEqual(parseSave(json),s);
+ assert.deepEqual(parseSave(JSON.stringify(s)),s); // a raw state object is accepted too
+ assert.equal(report(parseSave(json)).cash,80);
+});
+test('TRADE-SAVE-JSON: invalid, foreign and tampered files are rejected',()=>{
+ assert.throws(()=>parseSave('{not json'),/Not JSON/);
+ assert.throws(()=>parseSave('"text"'),/Not a save file/);
+ assert.throws(()=>parseSave(JSON.stringify({app:'other',state:initialState()})),/Not a save file/);
+ assert.throws(()=>parseSave(JSON.stringify({app:SAVE_APP,format:1})),/Not a save file/);
+ let s=initialState();s=buy(s,'e1','glass',3);
+ const forged={...s,events:[{...s.events[0],price:1}]};
+ assert.throws(()=>parseSave(JSON.stringify({app:SAVE_APP,format:1,state:forged})),/Tampered/);
+ assert.throws(()=>exportSave(forged),/Tampered/);
+});
