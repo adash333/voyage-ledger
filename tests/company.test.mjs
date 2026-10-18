@@ -317,13 +317,13 @@ test('COMPANY-12: idempotent commits, previews do not mutate, tampering and fore
  assert.deepEqual(parseSave(json),s);
  assert.deepEqual(parseSave(JSON.stringify(s)),s,'bare state is accepted');
  assert.throws(()=>parseSave('{oops'),/Not JSON/);
- assert.throws(()=>parseSave(JSON.stringify({app:'voyage-ledger-trade',format:1,state:{version:1,voyage:1,stop:0,status:'active',events:[]}})),/Not a save file/);
- assert.throws(()=>parseSave(JSON.stringify({version:1,voyage:1,stop:0,status:'active',events:[]})),/Not a save file/);
+ assert.throws(()=>parseSave(JSON.stringify({app:'voyage-ledger-trade',format:1,state:{version:1,voyage:1,stop:0,status:'active',events:[]}})),/Free trading save/);
+ assert.throws(()=>parseSave(JSON.stringify({version:1,voyage:1,stop:0,status:'active',events:[]})),/Free trading save/);
  assert.throws(()=>parseSave(JSON.stringify({app:SAVE_APP,format:2,state:s})),/Unsupported format/);
  assert.throws(()=>parseSave(JSON.stringify({app:SAVE_APP,format:1,state:forged})),/Tampered event/);
  // and the free trading mode refuses the company file
- assert.throws(()=>parseTradeSave(json),/Not a save file/);
- assert.throws(()=>parseTradeSave(JSON.stringify(s)));
+ assert.throws(()=>parseTradeSave(json),/Company save/);
+ assert.throws(()=>parseTradeSave(JSON.stringify(s)),/Company save/);
  // a save taken in the middle of the decision screen restores too
  let d=spec1Voyage();d=close(d,'2026-10-18T10:00:00Z');d=act(d,{kind:'repay',amount:100});
  assert.deepEqual(parseSave(exportSave(d).json),d);

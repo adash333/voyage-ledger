@@ -6,9 +6,10 @@ test('TRADE-EN-001: English trade preview, commit, journal and statements on mob
  await expect(page.locator('#prices tbody tr')).toHaveCount(4);
  await expect(page.locator('#prices tbody tr.current')).toContainText('Venice');
  await expect(page.locator('#mapLocation')).toContainText('Current port: Venice');
- await expect(page.locator('#mapIllustration')).toHaveAttribute('href','../assets/trade-atlas-en.webp');
- expect(await page.evaluate(async()=>{const image=new Image();image.src=document.querySelector('#mapIllustration').href.baseVal;await image.decode();return [image.naturalWidth,image.naturalHeight];})).toEqual([1672,941]);
+ await expect(page.locator('#mapIllustration')).toHaveAttribute('href','../assets/trade-atlas-en.webp?v=20261018-localized2');
+ expect(await page.evaluate(async()=>{const image=new Image();image.src=document.querySelector('#mapIllustration').href.baseVal;await image.decode();return [image.naturalWidth,image.naturalHeight];})).toEqual([1536,1024]);
  await expect(page.locator('#portDots .port-dot')).toHaveCount(4);
+ await expect(page.locator('#portDots .map-city')).toHaveText(['Venice','Alexandria','Constantinople','Barcelona']);
  await expect(page.locator('#routeSteps')).toContainText('Constantinople');
  await expect(page.locator('#mapCurrentText')).toHaveText('Now at: Venice');
  await expect(page.locator('#shipTitle')).toHaveText('Your ship at Venice');
@@ -63,6 +64,7 @@ test('TRADE-EN-004: English atlas tracks all ports in both directions and zooms 
    await expect(page.locator('#shipMarker')).toHaveAttribute('transform','translate('+x+' '+y+')');
    const lines=await page.locator('#routeLine polyline').evaluateAll(lines=>lines.map(line=>[line.points[0].x,line.points[0].y,line.points[line.points.length-1].x,line.points[line.points.length-1].y]));
    const anchors=await page.locator('#portDots g').evaluateAll(ports=>Object.fromEntries(ports.map(port=>[port.dataset.port,[+port.querySelector('circle').getAttribute('cx'),+port.querySelector('circle').getAttribute('cy')]])));
+   expect(anchors).toEqual({venice:[794,315],alexandria:[1038,744],constantinople:[1086,472],barcelona:[482,429]});
    expect(lines).toEqual(stops.slice(0,-1).map(([id],index)=>[...anchors[id],...anchors[stops[index+1][0]]]));
    await page.locator('#mapZoom').click();
    expect(await page.evaluate(()=>{const f=document.querySelector('#mapViewport').getBoundingClientRect(),s=document.querySelector('#shipSprite').getBoundingClientRect();return s.left>=f.left&&s.right<=f.right&&s.top>=f.top&&s.bottom<=f.bottom;})).toBe(true);

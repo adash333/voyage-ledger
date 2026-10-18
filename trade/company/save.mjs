@@ -16,6 +16,7 @@ export function parseSave(text){
  let data;
  try{data=JSON.parse(String(text));}catch(e){throw new Error('Not JSON');}
  if(!data||typeof data!=='object')throw new Error('Not a save file');
+ if(data.app==='voyage-ledger-trade'||data.app===undefined&&data.version===1&&Array.isArray(data.events)&&data.mode===undefined)throw new Error('Free trading save');
  if(data.app!==undefined&&data.app!==SAVE_APP)throw new Error('Not a save file'); // e.g. a free-trading-mode file
  const state=data.app===SAVE_APP?data.state:data.mode==='company'?data:null;
  if(!state||typeof state!=='object'||state.mode!=='company')throw new Error('Not a save file');

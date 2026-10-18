@@ -1,6 +1,6 @@
 import {renderMap} from './map.mjs?v=20261016-swipe1';
 import {PORTS,GOODS,CAPACITY,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from './accounting.mjs';
-import {exportSave,parseSave} from './save.mjs?v=20261017-save1';
+import {exportSave,parseSave} from './save.mjs?v=20261018-save-mode2';
 const KEY='voyage-trade-v1',GUIDE='voyage-trade-guide-v1';
 const names={pepper:'コショウ',silk:'絹織物',glass:'ガラス製品'};
 const $=id=>document.getElementById(id);
@@ -91,7 +91,7 @@ $('specialBtn').addEventListener('click',()=>{if(!confirm('特別決算して航
 $('continueBtn').addEventListener('click',()=>{state=nextVoyage(state);save();render();switchTab('trade');scrollTo({top:0,behavior:'smooth'});});
 $('restartBtn').addEventListener('click',()=>{if(!confirm('これまでの取引履歴を消して最初から始めますか？'))return;state=initialState();save();render();switchTab('trade');scrollTo({top:0,behavior:'smooth'});});
 function saveNote(text,error=false){$('saveMessage').textContent=text;$('saveMessage').classList.toggle('error',error);}
-function saveError(e){return ({'Not JSON':'JSONファイルとして読み込めませんでした。','Not a save file':'このゲームのセーブデータではありません。'})[e.message]||'セーブデータの形式が正しくありません（'+e.message+'）。';}
+function saveError(e){return ({'Not JSON':'JSONファイルとして読み込めませんでした。','Not a save file':'このゲームのセーブデータではありません。','Company save':'これは株式会社版のデータです。自由経営モードでは読み込めません。株式会社版でアップロードしてください。','Unsupported format':'このバージョンでは読み込めない形式です。'})[e.message]||'セーブデータの形式が正しくありません（'+e.message+'）。';}
 $('exportBtn').addEventListener('click',()=>{try{const {filename,json}=exportSave(state);const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);saveNote('保存しました：'+filename);}catch(e){saveNote('保存できませんでした：'+e.message,true);}});
 $('importFile').addEventListener('change',async()=>{const file=$('importFile').files[0];$('importFile').value='';if(!file)return;try{const next=parseSave(await file.text());if(!confirm('いまの進行状況を、ファイルの内容（第'+next.voyage+'航海）に置き換えますか？'))return;state=next;save();pending=null;render();switchTab('trade');saveNote('読み込みました：第'+state.voyage+'航海の続きから始めます。');}catch(e){saveNote('読み込めませんでした：'+saveError(e),true);}});
 const steps=['① 相場を比べよう。4つの港で商品の値段が違います。安い港で買い、高い港で売る方法を考えましょう。','② 商品を売買しよう。商品と数量を選んだら、仕訳を確認してから確定します。','③ 帳簿と決算書を見よう。「売買」「仕訳帳」「決算書」の3つのタブを切り替えられます。'];

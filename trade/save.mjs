@@ -16,8 +16,10 @@ export function parseSave(text){
  let data;
  try{data=JSON.parse(String(text));}catch(e){throw new Error('Not JSON');}
  if(!data||typeof data!=='object')throw new Error('Not a save file');
+ if(data.app==='voyage-ledger-company'||data.app===undefined&&data.mode==='company')throw new Error('Company save');
  // A bare state is accepted only when it is this game's (the company mode marks its states with mode:"company").
- const state=data.app===SAVE_APP?data.state:data.version===1&&Array.isArray(data.events)&&data.mode===undefined?data:null;
+ const state=data.app===SAVE_APP?data.state:data.app===undefined&&data.version===1&&Array.isArray(data.events)&&data.mode===undefined?data:null;
  if(!state)throw new Error('Not a save file');
+ if(data.app===SAVE_APP&&data.format!==SAVE_FORMAT)throw new Error('Unsupported format');
  return restore(state); // verifies the event history and rejects tampering
 }
