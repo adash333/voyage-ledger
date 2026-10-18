@@ -12,5 +12,29 @@ table.cf td,table.cf th{text-align:right}table.cf td:first-child,table.cf th:fir
 #ranking table td:nth-child(2){text-align:left;white-space:normal}
 #deadlineNote{color:#873414;background:#fff3e9;border-left:3px solid #b94e26;border-radius:5px;padding:9px 11px;font-size:.85rem;margin:8px 0}
 dialog.setup{max-width:min(94vw,460px)}dialog.setup .choice{display:grid;gap:10px;margin:12px 0}dialog.setup button{text-align:left;padding:12px}dialog.setup button small{display:block;font-weight:400;margin-top:3px;font-size:.8rem}
-body.hard .hero{background:#4a2516}
+
 ul#shipList{padding-left:18px;margin:6px 0;font-size:.9rem}
+
+/* Advanced-mode identity: deep navy, parchment and gold */
+body{background:#eae4d6}
+.company-hero{background:linear-gradient(135deg,#0b1826 0%,#16304a 55%,#244c70 100%);border:1px solid #c9a24a;box-shadow:0 10px 28px #0b182650;position:relative;overflow:hidden}
+.company-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,#e2c27022,transparent 45%);pointer-events:none}
+.company-hero .heading,.company-hero .summary{position:relative}
+.company-hero h1{color:#fff6dc;text-shadow:0 2px 6px #00000055}
+.company-hero .heading p{color:#d9e0e8}
+.level-badge{display:inline-block;margin-bottom:6px;padding:3px 9px;border:1px solid #e2c270;border-radius:999px;color:#f2d27a;font-size:.64rem;letter-spacing:.18em;font-weight:750}
+.company-hero .summary span{background:#0d1f31cc;border:1px solid #3d5a78}
+.company-hero .summary .badge{border-color:#e2c270}
+.badge.easy{background:#1f5c48}.badge.hard{background:#7a2a12;border-color:#ff9a5c!important}
+.company-hero .light{background:#f2d27a;color:#1a2a3a}
+.tabs button{background:#dcd6c6;color:#2a3442}.tabs button[aria-selected=true]{background:#16304a;color:#fff6dc;box-shadow:inset 0 -3px 0 #e2c270}
+button{background:#16304a}button.light,.file-button{background:#e6e0d1;color:#1a2a3a}
+section{border:1px solid #e3dccb}
+h2{color:#16304a}
+.box{background:#fcfaf4;border-color:#e3dccb}.box.exit{background:linear-gradient(120deg,#fff8ec,#fbeccf);border-color:#c9a24a}
+.statement{background:#fcfaf4}.asset-side{background:#e6eef8;border-top-color:#2f5f8f}.equity-side{background:#e8f1e6;border-top-color:#3d7a52}
+#celebrate{background:linear-gradient(120deg,#fff6d6,#ffe8a8);border-color:#c9a24a}
+body.hard .company-hero{background:linear-gradient(135deg,#1a0f0a 0%,#4a2516 55%,#7a3a1a 100%);border-color:#ff9a5c}
+body.hard .tabs button[aria-selected=true]{background:#4a2516;box-shadow:inset 0 -3px 0 #ff9a5c}
+body.hard button:not(.light):not([role=tab]){background:#4a2516}body.hard .company-hero .light{background:#ffcf8a}
+.back-link{flex:none;white-space:nowrap;padding:8px 10px;border-radius:9px;font-size:.74rem;font-weight:700;text-decoration:none;align-self:flex-start}
