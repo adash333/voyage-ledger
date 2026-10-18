@@ -4,19 +4,20 @@
 <header class="hero"><div class="heading"><div><h1>⛵ Free Trading Mode <span class="level-tag">Intermediate</span></h1><p>Sail between ports and learn trade and double-entry bookkeeping</p></div><button id="guideBtn" class="light">How to play</button></div><div id="summary" class="summary"></div></header>
 <section class="route-map" aria-labelledby="route-map-title">
 <div class="map-heading"><div><p class="map-eyebrow">MERCHANT'S ATLAS · 1500</p><h2 id="route-map-title">A trading voyage around four ports</h2></div><button id="mapZoom" class="light" aria-pressed="false" aria-controls="mapViewport">Enlarge map text</button></div>
-<p class="hint">The ship and the "Here" flag move to the port you are in. When enlarged, the map can be scrolled in every direction.</p>
-<div id="mapViewport" class="map-frame" tabindex="0" role="region" aria-label="Voyage map. When enlarged it scrolls in every direction"><svg id="voyageMap" viewBox="0 0 1536 1024" role="img" aria-label="A trading voyage around four ports" xmlns="http://www.w3.org/2000/svg">
-<desc>A parchment and watercolor voyage map with illustrated cards for the four cities and their prices, and a camel caravan on the overland route through Egypt. The ship at sea and the current port on the scroll change as the game moves.</desc>
-<image id="mapIllustration" href="../assets/trade-atlas.webp" width="1536" height="1024" preserveAspectRatio="none"/>
+<p class="hint">The ship and the "Here" flag move to the port you are in. When enlarged, scroll sideways across the map or swipe vertically to scroll the page.</p>
+<div id="mapViewport" class="map-frame" tabindex="0" role="region" aria-label="Voyage map. When enlarged, scroll sideways across the map or swipe vertically to scroll the page"><svg id="voyageMap" viewBox="0 0 1672 997" role="img" aria-label="A trading voyage around four ports" xmlns="http://www.w3.org/2000/svg">
+<desc>An English storybook atlas of Venice, Alexandria, Constantinople and Barcelona, with pepper, silk and glass. The overlaid ship, Here flag and sailing route follow your voyage.</desc>
+<image id="mapIllustration" href="../assets/trade-atlas-en.webp" width="1672" height="941"/>
 <g id="routeLine" aria-hidden="true"></g><g id="portDots" aria-hidden="true"></g>
-<g id="shipMarker" transform="translate(794 315)" aria-labelledby="shipTitle"><title id="shipTitle">Your ship at Venice</title><path id="shipHarborLink" d="M0 0L35 82" fill="none" stroke="#fff4cd" stroke-width="3" stroke-dasharray="4 5"/><image id="shipSprite" href="../assets/merchant-ship.webp" x="-21" y="26" width="112" height="112"/>
+<g id="shipMarker" transform="translate(967 388)" aria-labelledby="shipTitle"><title id="shipTitle">Your ship at Venice</title><path id="shipHarborLink" d="M0 0L35 82" fill="none" stroke="#fff4cd" stroke-width="3" stroke-dasharray="4 5"/><image id="shipSprite" href="../assets/merchant-ship.webp" x="-21" y="26" width="112" height="112"/>
 <g id="shipFlag" transform="translate(92 46)"><path d="M0 0Q50-5 106 0L100 15 106 32Q50 28 0 32L3 16Z" fill="#fff1c9" stroke="#87552c" stroke-width="2"/><text x="53" y="23" text-anchor="middle" class="ship-flag-text">Here</text></g></g>
-<text id="mapCurrentText" x="682" y="984" font-size="16" textLength="234" lengthAdjust="spacingAndGlyphs" class="map-current-text">Now at: Venice</text>
+<rect x="0" y="941" width="1672" height="56" fill="#fff1d1"/>
+<text id="mapCurrentText" x="836" y="979" font-size="28" data-font-size="28" text-anchor="middle" class="map-current-text">Now at: Venice</text>
 </svg></div>
 <p id="mapLocation" class="map-location" aria-live="polite"></p>
 <article class="current-port-detail" aria-labelledby="mapPortName"><div><small>Current port</small><h3 id="mapPortName"></h3><p id="mapPortDescription"></p></div><div><p class="map-market-caption">Prices (per unit)</p><dl id="mapPortPrices" class="map-market"></dl></div></article>
 <ol id="routeSteps" class="route-steps" aria-label="Route of this voyage"></ol>
-<p class="map-caption">Dotted lines at sea show the sailing order; the brown road shows overland trade. The city cards on the illustration are in Japanese; landscapes and buildings are for learning only.</p>
+<p class="map-caption">The English city labels name the four ports in the game. The moving ship and Here flag mark your current port; the overlaid lines show the sailing order. Landscapes and buildings are for learning only.</p>
 </section>
 <nav class="tabs" role="tablist" aria-label="Game screens"><button role="tab" id="tab-trade" aria-controls="panel-trade" aria-selected="true" data-tab="trade">🛒 Trade</button><button role="tab" id="tab-journal" aria-controls="panel-journal" aria-selected="false" data-tab="journal">📖 Journal</button><button role="tab" id="tab-report" aria-controls="panel-report" aria-selected="false" data-tab="report">📊 Statements</button></nav>
 <section role="tabpanel" id="panel-trade" aria-labelledby="tab-trade">
@@ -33,4 +34,4 @@
 <p id="message" role="status" aria-live="polite"></p>
 <a class="advanced-banner" href="../company/en/" aria-label="Advanced: Company Mode"><span class="advanced-eyebrow">ADVANCED</span><strong>🏢 Take on Company Mode →</strong><span class="advanced-desc">Comfortable with Free Trading Mode? Move up to Company Mode: bank loans, ship depreciation, shares and dividends. On hard mode, aim for the ultimate goal: selling your company in an exit!</span></a>
 <footer><p><a href="../../en/">← Back to Voyage Ledger</a> · <a href="../company/en/">Company Mode</a> · <a href="../" lang="ja">日本語版 / Japanese</a></p><p>Prices are fictional and for learning only. Ledger amounts are counted in gold coins.</p></footer>
-</main><dialog id="guide"><h2>⛵ First-time merchant guide</h2><p id="guideStep"></p><div class="actions"><button id="guideBack" class="light">Back</button><button id="guideNext">Next</button><button id="guideSkip" class="light">Skip</button></div></dialog><script type="module" src="./app.js?v=20261017-save1"></script></body></html>
+</main><dialog id="guide"><h2>⛵ First-time merchant guide</h2><p id="guideStep"></p><div class="actions"><button id="guideBack" class="light">Back</button><button id="guideNext">Next</button><button id="guideSkip" class="light">Skip</button></div></dialog><script type="module" src="./app.js?v=20261018-atlas-en1"></script></body></html>

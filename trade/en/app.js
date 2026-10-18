@@ -1,4 +1,4 @@
-import {renderMap,configureMap} from '../map.mjs?v=20261016-swipe1';
+import {renderMap,configureMap} from '../map.mjs?v=20261018-atlas-en1';
 import {PORTS,GOODS,CAPACITY,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from '../accounting.mjs';
 import {exportSave,parseSave} from '../save.mjs?v=20261017-save1';
 // English UI for the free trading mode. Shares the accounting engine, the map module and the save key with the Japanese page.
@@ -22,6 +22,19 @@ configureMap({
  stepCurrent:'Here',
  zoomIn:'Enlarge map text',
  zoomOut:'Show whole map'
+},{
+ // Anchors match the English artwork's native 1672×941 canvas.
+ ports:{
+  venice:{point:[967,388],ship:[-75,70],flag:[-165,10]},
+  alexandria:{point:[1284,670],ship:[-115,-20],flag:[-225,-55]},
+  constantinople:{point:[1190,535],ship:[-85,70],flag:[-175,50]},
+  barcelona:{point:[485,523],ship:[100,70],flag:[170,30]}
+ },
+ legs:[
+  ['venice','alexandria',[[916,470],[923,550],[1000,620],[1130,680]]],
+  ['alexandria','constantinople',[[1215,635],[1170,590]]],
+  ['constantinople','barcelona',[[1100,565],[1040,600],[875,620],[740,580],[610,570]]]
+ ]
 });
 const $=id=>document.getElementById(id);
 let state=initialState(),pending=null,tab='trade',guideIndex=0;

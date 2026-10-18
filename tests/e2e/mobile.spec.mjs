@@ -205,8 +205,15 @@ test('SPEC-HISTORY-INTRO-001 introductory illustration appears in Japanese and E
   await page.goto(route);
   const art=page.locator('figure.intro-art');
   await expect(art).toHaveCount(1);
-  await expect(art.locator('svg')).toBeVisible();
-  await expect(art).toHaveAttribute('aria-label',/.+/);
+  if(route==='/history/'){
+   const image=art.locator('img');
+   await expect(image).toBeVisible();
+   await expect(image).toHaveAttribute('alt',/帳簿の世界史/);
+   expect(await image.evaluate(async image=>{await image.decode();return image.naturalWidth>1000&&Math.abs(image.clientWidth/image.clientHeight-image.naturalWidth/image.naturalHeight)<.02;})).toBe(true);
+  }else{
+   await expect(art.locator('svg')).toBeVisible();
+   await expect(art).toHaveAttribute('aria-label',/.+/);
+  }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  }
 });
