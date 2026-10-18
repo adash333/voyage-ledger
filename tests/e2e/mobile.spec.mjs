@@ -154,16 +154,29 @@ test('SPEC-HISTORY-001 reading page opens from homepage and has six chapters',as
  await expect(page.getByRole('link',{name:/YouTube/})).toHaveAttribute('href','https://youtu.be/T6j6C49bsss');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
-test('SPEC-HISTORY-002 six chapter illustrations are visible on mobile',async({page})=>{
- await page.goto('/history/');
- const art=page.locator('figure.chapter-art');
- await expect(art).toHaveCount(6);
- for(let i=0;i<6;i++){
-  await art.nth(i).scrollIntoViewIfNeeded();
-  await expect(art.nth(i).locator('svg')).toBeVisible();
-  await expect(art.nth(i)).toHaveAttribute('aria-label',/.+/);
+test('SPEC-HISTORY-002 six shared chapter illustrations load without cropping in both languages',async({page})=>{
+ const sources=[];
+ for(const route of ['/history/','/history/en/']){
+  await page.goto(route);
+  const art=page.locator('figure.chapter-art');
+  await expect(art).toHaveCount(6);
+  const localizedSources=[];
+  for(let i=0;i<6;i++){
+   const image=art.nth(i).locator('img');
+   await image.scrollIntoViewIfNeeded();
+   await expect(image).toBeVisible();
+   await expect(image).toHaveAttribute('alt',/.+/);
+   const size=await image.evaluate(async image=>{await image.decode();return {source:image.currentSrc,width:image.naturalWidth,height:image.naturalHeight,ratio:image.clientWidth/image.clientHeight,naturalRatio:image.naturalWidth/image.naturalHeight};});
+   expect(size.width).toBeGreaterThan(1000);
+   expect(size.height).toBeGreaterThan(400);
+   expect(Math.abs(size.ratio-size.naturalRatio)).toBeLessThan(.02);
+   localizedSources.push(size.source);
+  }
+  expect(new Set(localizedSources).size).toBe(6);
+  sources.push(localizedSources);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  }
- expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ expect(sources[1]).toEqual(sources[0]);
 });
 test('SPEC-LEMON-QUIZ-001 full-score mobile quiz',async({page})=>{
  await page.goto('/lemonade/');
