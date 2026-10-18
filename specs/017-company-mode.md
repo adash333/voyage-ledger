@@ -206,3 +206,10 @@ v1.x では船の売却と借り換えを行わないため、特別決算の条
 - 借り換え・追加借入と審査の計算式。
 - 相場変動、事故、保険。
 - 第10航海以降の終了条件（現状は返済後も無期限に続けられる）。
+
+## 17. 実装メモ（2026-10-18）
+- 会計エンジン `trade/company/accounting.mjs`（イベント再実行型。買う／売る／出航／船購入／決算／特別決算／債務不履行／返済／株式発行／配当／エグジット／難易度切替の12種のイベント）、保存 `trade/company/save.mjs`、共有UI `trade/company/ui.mjs`、日本語 `trade/company/app.js`・`index.html`、英語 `trade/company/en/app.js`・`index.html`、追加スタイル `trade/company/company.css`。
+- 仕訳の勘定科目はデータ上は英語の内部キー（`cash`, `ships`, `interest` など）で持ち、表示層で日英に変換する。
+- 状態は `{version:1,mode:"company",difficulty,voyage,stop,status,events}`。`status` は active／closed／special／exited。`difficulty` は現在の難易度で、やさしい→本気の切替はイベントとして記録し、復元時に照合する。
+- 自由経営モードの `trade/save.mjs` は、`mode` を持つ状態（会社版）を「このゲームのファイルではない」として拒否するよう 1 行だけ変更した。
+- テスト: `tests/company.test.mjs`（12件、受入基準 13 章の 1〜10 と 12 に対応）、`tests/e2e/company.spec.mjs`（4件: 日本語の一連の流れ、保存・復元・不正ファイル、360px と本気モードと自由経営モード側の拒否、英語版と日英往復）。

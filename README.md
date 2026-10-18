@@ -8,6 +8,8 @@
 ## 自由経営モード
 4つの港をめぐって売買と決算を繰り返す「自由経営モード」は `/trade/`（日本語）と `/trade/en/`（英語）にあります。両方とも同じ会計エンジン `trade/accounting.mjs` とセーブデータを共有します。セーブデータは JSON ファイルに保存して、別の端末で読み込んで続きから遊べます。
 
+株式会社版 `/trade/company/`（日本語）と `/trade/company/en/`（英語）は、借入・利息・船の減価償却・株式発行・配当・エグジットまで扱う上級モードです（仕様は `specs/017-company-mode.md`）。会計エンジンは `trade/company/accounting.mjs`、セーブデータは `company-ledger-YYYYMMDD-HHMM.json` で、自由経営モードのファイルとは互いに読み込めません。難易度「やさしい」「本気」を設立時に選べます。
+
 ## ローカル実行
 依存ライブラリは不要です。リポジトリのルートで `python -m http.server 8000` を実行し、`http://localhost:8000` を開いてください。
 

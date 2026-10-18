@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node scripts/test.mjs",
     "test:e2e": "playwright test",
-    "check": "node --check src.js && node --check accounting.mjs && node --check en/app.js && node --check lemonade/app.js && node --check lemonade/accounting.mjs && node --check lemonade/en/app.js && node --check kids/app.js && node --check lemonade/kids/app.js && node --check quiz/app.js && node --check quiz/questions.mjs && node --check quiz/en/app.js && node --check quiz/en/questions.mjs && node --check lemonade/quiz/app.js && node --check lemonade/quiz/questions.mjs && node --check trade/accounting.mjs && node --check trade/app.js && node --check trade/map.mjs && node --check trade/save.mjs && node --check trade/en/app.js && npm test"
+    "check": "node --check src.js && node --check accounting.mjs && node --check en/app.js && node --check lemonade/app.js && node --check lemonade/accounting.mjs && node --check lemonade/en/app.js && node --check kids/app.js && node --check lemonade/kids/app.js && node --check quiz/app.js && node --check quiz/questions.mjs && node --check quiz/en/app.js && node --check quiz/en/questions.mjs && node --check lemonade/quiz/app.js && node --check lemonade/quiz/questions.mjs && node --check trade/accounting.mjs && node --check trade/app.js && node --check trade/map.mjs && node --check trade/save.mjs && node --check trade/en/app.js && node --check trade/company/accounting.mjs && node --check trade/company/save.mjs && node --check trade/company/ui.mjs && node --check trade/company/app.js && node --check trade/company/en/app.js && npm test"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1"

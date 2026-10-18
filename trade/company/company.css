@@ -1,0 +1,16 @@
+/* Company mode additions on top of ../style.css */
+.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.summary .badge{grid-column:1/-1;text-align:center;font-weight:750}.badge.hard{background:#8a3b1a}.badge.easy{background:#2f7a4f}
+.tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.tabs button{padding:10px 2px;font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:430px){.tabs{display:flex;overflow-x:auto;gap:5px;padding-bottom:4px;scrollbar-width:thin}.tabs button{flex:0 0 auto;min-width:72px;font-size:.8rem;padding:10px 9px}}
+.box{border:1px solid #dbe6e2;border-radius:12px;padding:12px;margin:12px 0;background:#fbfdfc}.box h3{margin:0 0 6px;font-size:1rem}.box p{margin:6px 0}
+.box.exit{border-color:#e4b27a;background:#fff8ec}.box.hard-switch{border-color:#d9a08a;background:#fff3ee}
+.checklist{list-style:none;padding:0;margin:6px 0}.checklist li{padding:3px 0;font-size:.9rem}
+.form.compact{grid-template-columns:minmax(0,1fr) auto;align-items:end}.form.compact label{display:block}.form.compact button{margin-bottom:2px}
+button.small{padding:6px 10px;font-size:.8rem}.guide{background:#e8f3fb;border-radius:9px;padding:10px;font-weight:650}
+#celebrate{background:#fff6d6;border:2px solid #f0c75e}#celebrate h2{margin-bottom:6px}
+table.cf td,table.cf th{text-align:right}table.cf td:first-child,table.cf th:first-child{text-align:left;white-space:normal}table.cf tr.total{font-weight:750}
+#ranking table td:nth-child(2){text-align:left;white-space:normal}
+#deadlineNote{color:#873414;background:#fff3e9;border-left:3px solid #b94e26;border-radius:5px;padding:9px 11px;font-size:.85rem;margin:8px 0}
+dialog.setup{max-width:min(94vw,460px)}dialog.setup .choice{display:grid;gap:10px;margin:12px 0}dialog.setup button{text-align:left;padding:12px}dialog.setup button small{display:block;font-weight:400;margin-top:3px;font-size:.8rem}
+body.hard .hero{background:#4a2516}
+ul#shipList{padding-left:18px;margin:6px 0;font-size:.9rem}
