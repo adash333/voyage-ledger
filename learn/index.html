@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>かいけいの きほん｜大航海商人アカデミー</title><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="icon" href="../favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><link rel="stylesheet" href="./style.css?v=20261020-learn3"></head>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>かいけいの きほん｜大航海商人アカデミー</title><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="icon" href="../favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><link rel="stylesheet" href="./style.css?v=20261020-learn4"></head>
 <body><main>
 <header class="hero"><p class="eyebrow">📘 入門{にゅうもん}・5分{ふん}でわかる</p><h1>かいけい いちばんやさしい きょうかしょ</h1><p>お金{かね}の動{うご}きを、「2つの面{めん}」から見{み}るれんしゅう。読{よ}んだら、ゲームで試{ため}してみよう。</p><div class="tools"><button id="rubyToggle" class="light" aria-pressed="true">ふりがな：あり</button><a class="light" href="../" style="padding:11px 15px;border-radius:11px;font-weight:700;text-decoration:none;display:inline-block">← アカデミーへ</a></div></header>
 
@@ -14,7 +14,7 @@
 
 <section id="step2"><h2><span class="num">2</span>持{も}ち物{もの}と、お金{かね}の出{で}どころ</h2>
 <p>宝箱{たからばこ}の中身{なかみ}（現金{げんきん}・商品{しょうひん}・船{ふね}）が<strong>財産{ざいさん}</strong>。そのお金{かね}が「自分{じぶん}のもの」か「借{か}りたもの」かが<strong>出{で}どころ</strong>。天秤{てんびん}の左{ひだり}と右{みぎ}は、いつもつり合{あ}います。</p>
-<div class="try"><h3>やってみよう</h3><div class="actions"><button data-act="borrow">銀行{ぎんこう}から100借{か}りる</button><button data-act="ship">船{ふね}を100で買{か}う</button><button data-act="goods">コショウを50仕入{しい}れる</button><button id="balanceReset" class="light">はじめにもどす</button></div>
+<div class="try"><h3>やってみよう</h3><div class="actions stack"><button data-act="borrow">銀行{ぎんこう}から100借{か}りる</button><button data-act="ship">船{ふね}を100で買{か}う</button><button data-act="goods">コショウを50仕入{しい}れる</button><button id="balanceReset" class="light">はじめにもどす</button></div>
 <div class="sides"><div class="side left"><h4>宝箱{たからばこ}（財産{ざいさん}）</h4><div id="balanceLeft"></div></div><div class="side right"><h4>出{で}どころ</h4><div id="balanceRight"></div></div></div>
 <div class="scale"><div class="pan left" id="panLeft"></div><div class="pivot" aria-hidden="true">⚖️</div><div class="pan right" id="panRight"></div></div>
 <p id="balanceNote" class="hint"></p></div>
@@ -23,7 +23,7 @@
 <section id="step3"><h2><span class="num">3</span>もうけは「売{う}ったお金{かね} − かかったお金{かね}」</h2>
 <p>金貨{きんか}100枚{まい}を持{も}って、コショウを10ふくろ（1ふくろ6枚{まい}）仕入{しい}れました。1ふくろ9枚{まい}で売{う}ります。何{なん}ふくろ売{う}れたかで、もうけが変{か}わります。</p>
 <div class="try"><h3>やってみよう：売{う}れた数{かず}を動{うご}かそう</h3><label for="soldRange">売{う}れた数{かず}：<span id="soldLabel" class="big">0</span> ふくろ</label><input id="soldRange" type="range" min="0" max="10" value="0">
-<div class="sides stack"><div class="side left"><h4>もうけの計算{けいさん}（損益計算書{そんえきけいさんしょ}）</h4><div id="profitBox"></div></div><div class="side right"><h4>いまの宝箱{たからばこ}（財産{ざいさん}）</h4><div id="chestBox"></div></div></div>
+<div class="sides stack"><div class="side pl"><h4>もうけの計算{けいさん}（損益計算書{そんえきけいさんしょ}）</h4><div id="profitBox"></div></div><div class="side left"><h4>宝箱{たからばこ}（財産{ざいさん}）</h4><div id="chestBox"></div></div></div>
 <p id="profitNote" class="hint"></p></div>
 <div class="point">もうけの計算{けいさん}の表{ひょう}を<strong>損益計算書{そんえきけいさんしょ}（P/L）</strong>といいます。金貨{きんか}が減{へ}っても、コショウが残{のこ}っていれば財産{ざいさん}は減{へ}っていません。「金貨{きんか}の数{かず}」と「もうけ」はべつのものです。</div></section>
 
@@ -31,7 +31,7 @@
 <p>船{ふね}を500枚{まい}で買{か}いました。金貨{きんか}は減{へ}ったけれど、船{ふね}という財産{ざいさん}が増{ふ}えたので、ソンではありません。でも船{ふね}は、使{つか}うたびに少{すこ}しずつ古{ふる}くなります。その分{ぶん}だけ、航海{こうかい}1回{かい}につき25枚{まい}を<strong>費用{ひよう}</strong>にします。</p>
 <div class="try"><h3>やってみよう</h3><div class="actions"><button id="voyageBtn">1回{かい} 航海{こうかい}する</button><button id="shipReset" class="light">新{あたら}しい船{ふね}にする</button></div>
 <p>航海{こうかい}した回数{かいすう}：<span id="voyageCount" class="big">0</span> 回{かい}</p><div class="bar"><span id="shipBar" style="width:100%"></span></div>
-<div class="sides"><div class="side left"><h4>船{ふね}の帳簿{ちょうぼ}の値段{ねだん}</h4><p class="big" id="bookValue">500</p></div><div class="side right"><h4>これまでに費用{ひよう}にした分{ぶん}</h4><p class="big" id="wearTotal">0</p></div></div>
+<div class="sides"><div class="side ship"><h4>船{ふね}の帳簿{ちょうぼ}の値段{ねだん}</h4><p class="big" id="bookValue">500</p></div><div class="side wear"><h4>これまでに費用{ひよう}にした分{ぶん}</h4><p class="big" id="wearTotal">0</p></div></div>
 <p id="shipNote" class="hint"></p></div>
 <div class="point">これを<strong>減価償却{げんかしょうきゃく}</strong>といいます。金貨{きんか}は出{で}ていかないのに、費用{ひよう}になる。ちょっとふしぎな費用{ひよう}です。</div></section>
 

@@ -13,10 +13,10 @@ p{margin:8px 0}
 rt{font-size:.55em;color:#53636c}button rt,.hero rt{color:inherit;opacity:.9}body.no-ruby rt{display:none}
 .try{margin-top:12px;padding:14px;border-radius:14px;background:#f1f8f6;border:1px dashed #9fc4c9}
 .try h3{margin-top:0;color:#176b76}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.actions.stack{flex-direction:column;align-items:stretch}.actions.stack button{text-align:left}
 .sides{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.sides.stack{grid-template-columns:1fr}
 .side{padding:10px;border-radius:12px;min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column}.side>div{display:flex;flex-direction:column;flex:1}
-.side.left{background:#e1f0fb;border-top:4px solid #4b9cc8}.side.right{background:#dff6e8;border-top:4px solid #35a975}
+.side.left{background:#e1f0fb;border-top:4px solid #4b9cc8}.side.right{background:#dff6e8;border-top:4px solid #35a975}.side.pl{background:#fff1dc;border-top:4px solid #e08a3c}.side.ship{background:#efe9fb;border-top:4px solid #8a6fd1}.side.wear{background:#fde8e8;border-top:4px solid #d26a6a}.side.ship .big{color:#5b43a8}.side.wear .big{color:#b23b3b}
 .side h4{margin:0 0 6px;font-size:.86rem}
 .row{display:flex;justify-content:space-between;gap:6px;padding:5px 0;border-bottom:1px solid #ffffff99;font-size:.95rem}
 .row strong{white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -28,7 +28,7 @@ rt{font-size:.55em;color:#53636c}button rt,.hero rt{color:inherit;opacity:.9}bod
 .pivot{font-size:2rem;line-height:1}
 .point{margin-top:12px;padding:12px;border-radius:12px;background:#fff6d6;border-left:5px solid #f0c75e}
 input[type=range]{width:100%;margin:10px 0}
-.big{font-size:1.35rem;font-weight:800;color:#176b76}
+.big{font-size:1.35rem;font-weight:800;color:#176b76}.side>p.big{margin-top:auto;margin-bottom:4px}
 .bar{height:16px;background:#e3dccb;border-radius:8px;overflow:hidden;margin:8px 0}.bar>span{display:block;height:100%;background:#4b9cc8}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .card{border:0;border-radius:12px;padding:12px 10px;min-height:92px;background:#e9f4f0;color:#253344;text-align:left;font-weight:600;line-height:1.6;font-size:.92rem}
