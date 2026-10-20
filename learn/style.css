@@ -15,12 +15,12 @@ rt{font-size:.55em;color:#53636c}button rt,.hero rt{color:inherit;opacity:.9}bod
 .try h3{margin-top:0;color:#176b76}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
 .sides{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.sides.stack{grid-template-columns:1fr}
-.side{padding:10px;border-radius:12px;min-width:0;overflow-wrap:anywhere}
+.side{padding:10px;border-radius:12px;min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column}.side>div{display:flex;flex-direction:column;flex:1}
 .side.left{background:#e1f0fb;border-top:4px solid #4b9cc8}.side.right{background:#dff6e8;border-top:4px solid #35a975}
 .side h4{margin:0 0 6px;font-size:.86rem}
 .row{display:flex;justify-content:space-between;gap:6px;padding:5px 0;border-bottom:1px solid #ffffff99;font-size:.95rem}
 .row strong{white-space:nowrap;font-variant-numeric:tabular-nums}
-.total{font-weight:800;border-top:2px solid #253344;margin-top:6px;padding-top:6px}
+.total{font-weight:800;border-top:2px solid #253344;margin-top:auto;padding-top:6px}.row.total{margin-top:auto}
 .check{text-align:center;font-weight:800;color:#126a4d;background:#e6f6ed;border-radius:9px;padding:9px;margin-top:8px}
 .scale{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:6px;margin-top:8px}
 .pan{text-align:center;font-weight:800;padding:10px;border-radius:12px}
