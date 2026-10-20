@@ -10,6 +10,8 @@
 
 株式会社版 `/trade/company/`（日本語）と `/trade/company/en/`（英語）は、借入・利息・船の減価償却・株式発行・配当・エグジットまで扱う上級モードです（仕様は `specs/017-company-mode.md`）。会計エンジンは `trade/company/accounting.mjs`、セーブデータは `company-ledger-YYYYMMDD-HHMM.json` で、自由経営モードのファイルとは互いに読み込めません。難易度「やさしい」「本気」を設立時に選べます。
 
+`/learn/`「かいけい いちばんやさしい きょうかしょ」は小学3年生からの会計入門ページです（仕様は `specs/018-learn-basics.md`）。全漢字にふりがなを付け、5つのステップの体験・ことばカード・クイズで複式簿記の考え方を説明します。
+
 ## ローカル実行
 依存ライブラリは不要です。リポジトリのルートで `python -m http.server 8000` を実行し、`http://localhost:8000` を開いてください。
 

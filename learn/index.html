@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>かいけいの きほん｜大航海商人アカデミー</title><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="icon" href="../favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><link rel="stylesheet" href="./style.css?v=20261020-learn1"></head>
+<body><main>
+<header class="hero"><p class="eyebrow">📘 入門{にゅうもん}・5分{ふん}でわかる</p><h1>かいけい いちばんやさしい きょうかしょ</h1><p>お金{かね}の動{うご}きを、「2つの面{めん}」から見{み}るれんしゅう。読{よ}んだら、ゲームで試{ため}してみよう。</p><div class="tools"><button id="rubyToggle" class="light" aria-pressed="true">ふりがな：あり</button><a class="light" href="../" style="padding:11px 15px;border-radius:11px;font-weight:700;text-decoration:none;display:inline-block">← アカデミーへ</a></div></header>
+
+<section><p>会計{かいけい}（かいけい）は、お金{かね}がどう動{うご}いたかを書{か}きとめて、「もうかった？」「財産{ざいさん}はどれだけ？」を知{し}るしくみです。むずかしい言葉{ことば}は出{で}てきますが、やることは5つだけ。じゅんばんに見{み}ていこう。</p></section>
+
+<section id="step1"><h2><span class="num">1</span>お金{かね}は「どこから来{き}て、どこへ行{い}った」の2つで書{か}く</h2>
+<p>金貨{きんか}60枚{まい}でコショウを買{か}いました。金貨{きんか}が出{で}ていって、コショウが手{て}に入{はい}りました。会計{かいけい}では、これを<strong>左{ひだり}（手{て}に入{はい}ったもの）</strong>と<strong>右{みぎ}（出{で}ていったもの）</strong>に、同{おな}じ数{かず}で書{か}きます。</p>
+<div class="try"><h3>やってみよう</h3><div class="actions"><button id="buyBtn">コショウを買{か}う（60枚{まい}）</button><button id="sellBtn" disabled>コショウを売{う}る（90枚{まい}）</button><button id="entryReset" class="light">はじめにもどす</button></div>
+<div class="sides"><div class="side left"><h4>左{ひだり}：手{て}に入{はい}ったもの</h4><div id="entryLeft"></div></div><div class="side right"><h4>右{みぎ}：出{で}ていったもの</h4><div id="entryRight"></div></div></div>
+<p id="entryNote" class="hint">ボタンをおしてみよう。</p><p id="entryCheck" class="check" hidden></p></div>
+<div class="point">この書{か}き方{かた}を<strong>仕訳{しわけ}</strong>といいます。左{ひだり}と右{みぎ}の数{かず}は、いつも同{おな}じ。だから書{か}きまちがいにすぐ気{き}づけます。</div></section>
+
+<section id="step2"><h2><span class="num">2</span>持{も}ち物{もの}と、お金{かね}の出{で}どころ</h2>
+<p>宝箱{たからばこ}の中身{なかみ}（現金{げんきん}・商品{しょうひん}・船{ふね}）が<strong>財産{ざいさん}</strong>。そのお金{かね}が「自分{じぶん}のもの」か「借{か}りたもの」かが<strong>出{で}どころ</strong>。天秤{てんびん}の左{ひだり}と右{みぎ}は、いつもつり合{あ}います。</p>
+<div class="try"><h3>やってみよう</h3><div class="actions"><button data-act="borrow">銀行{ぎんこう}から100借{か}りる</button><button data-act="ship">船{ふね}を100で買{か}う</button><button data-act="goods">コショウを50仕入{しい}れる</button><button id="balanceReset" class="light">はじめにもどす</button></div>
+<div class="sides"><div class="side left"><h4>宝箱{たからばこ}（財産{ざいさん}）</h4><div id="balanceLeft"></div></div><div class="side right"><h4>出{で}どころ</h4><div id="balanceRight"></div></div></div>
+<div class="scale"><div class="pan left" id="panLeft"></div><div class="pivot" aria-hidden="true">⚖️</div><div class="pan right" id="panRight"></div></div>
+<p id="balanceNote" class="hint"></p></div>
+<div class="point">この表{ひょう}を<strong>貸借対照表{たいしゃくたいしょうひょう}（B/S）</strong>といいます。「財産{ざいさん} ＝ 借金{しゃっきん} ＋ 自分{じぶん}のお金{かね}」。船{ふね}を買{か}っても、財産{ざいさん}の合計{ごうけい}は変{か}わりません。</div></section>
+
+<section id="step3"><h2><span class="num">3</span>もうけは「売{う}ったお金{かね} − かかったお金{かね}」</h2>
+<p>金貨{きんか}100枚{まい}を持{も}って、コショウを10ふくろ（1ふくろ6枚{まい}）仕入{しい}れました。1ふくろ9枚{まい}で売{う}ります。何{なん}ふくろ売{う}れたかで、もうけが変{か}わります。</p>
+<div class="try"><h3>やってみよう：売{う}れた数{かず}を動{うご}かそう</h3><label for="soldRange">売{う}れた数{かず}：<span id="soldLabel" class="big">0</span> ふくろ</label><input id="soldRange" type="range" min="0" max="10" value="0">
+<div class="sides"><div class="side left"><h4>もうけの計算{けいさん}</h4><div id="profitBox"></div></div><div class="side right"><h4>いまの宝箱{たからばこ}</h4><div id="chestBox"></div></div></div>
+<p id="profitNote" class="hint"></p></div>
+<div class="point">もうけの計算{けいさん}の表{ひょう}を<strong>損益計算書{そんえきけいさんしょ}（P/L）</strong>といいます。金貨{きんか}が減{へ}っても、コショウが残{のこ}っていれば財産{ざいさん}は減{へ}っていません。「金貨{きんか}の数{かず}」と「もうけ」はべつのものです。</div></section>
+
+<section id="step4"><h2><span class="num">4</span>金貨{きんか}が減{へ}っても、ソンじゃない</h2>
+<p>船{ふね}を500枚{まい}で買{か}いました。金貨{きんか}は減{へ}ったけれど、船{ふね}という財産{ざいさん}が増{ふ}えたので、ソンではありません。でも船{ふね}は、使{つか}うたびに少{すこ}しずつ古{ふる}くなります。その分{ぶん}だけ、航海{こうかい}1回{かい}につき25枚{まい}を<strong>費用{ひよう}</strong>にします。</p>
+<div class="try"><h3>やってみよう</h3><div class="actions"><button id="voyageBtn">1回{かい} 航海{こうかい}する</button><button id="shipReset" class="light">新{あたら}しい船{ふね}にする</button></div>
+<p>航海{こうかい}した回数{かいすう}：<span id="voyageCount" class="big">0</span> 回{かい}</p><div class="bar"><span id="shipBar" style="width:100%"></span></div>
+<div class="sides"><div class="side left"><h4>船{ふね}の帳簿{ちょうぼ}の値段{ねだん}</h4><p class="big" id="bookValue">500</p></div><div class="side right"><h4>これまでに費用{ひよう}にした分{ぶん}</h4><p class="big" id="wearTotal">0</p></div></div>
+<p id="shipNote" class="hint"></p></div>
+<div class="point">これを<strong>減価償却{げんかしょうきゃく}</strong>といいます。金貨{きんか}は出{で}ていかないのに、費用{ひよう}になる。ちょっとふしぎな費用{ひよう}です。</div></section>
+
+<section id="step5"><h2><span class="num">5</span>借{か}りたお金{かね}と、預{あず}かったお金{かね}</h2>
+<p>商売{しょうばい}を大{おお}きくするお金{かね}の集{あつ}め方{かた}は2つあります。</p>
+<div class="try"><div class="actions"><button id="loanBtn">銀行{ぎんこう}から100借{か}りる</button><button id="shareBtn" class="light">仲間{なかま}に100出{だ}してもらう</button></div><div id="financeBox"></div></div>
+<div class="point"><strong>借{か}りたお金{かね}</strong>は、あとで返{かえ}す。しかもレンタル料{りょう}（<strong>利息{りそく}</strong>）がかかる。<strong>仲間{なかま}に出{だ}してもらったお金{かね}（株{かぶ}）</strong>は、返{かえ}さなくていいかわりに、もうけを分{わ}ける（<strong>配当{はいとう}</strong>）。どちらも宝箱{たからばこ}の「出{で}どころ」に書{か}かれます。</div></section>
+
+<section id="glossary"><h2>📇 ことばカード</h2><p>タップすると、やさしい言{い}いかえが出{で}ます。</p><div id="cards" class="cards"></div></section>
+
+<section id="quiz"><h2>❓ どっちが正{ただ}しい？</h2><p>まちがえても大丈夫{だいじょうぶ}。理由{りゆう}を読{よ}んでみよう。</p><div id="quizBox"></div></section>
+
+<section class="next"><h2>⛵ つぎは、ゲームで試{ため}そう</h2>
+<a href="../kids/">🌱 こしょうやさん（しょうがっこう ていがくねん むけ） →</a>
+<a href="../">🧭 大航海{だいこうかい}商人{しょうにん}アカデミー（コショウ商人{しょうにん}の物語{ものがたり}） →</a>
+<a href="../trade/">⛵ 自由経営{じゆうけいえい}モード（中級編{ちゅうきゅうへん}） →</a>
+<a class="adv" href="../trade/company/">🏢 株式会社版{かぶしきがいしゃばん}（上級編{じょうきゅうへん}）→ 借金{しゃっきん}・船{ふね}・株{かぶ}・エグジット</a>
+<a href="../history/">📚 読{よ}み物{もの}：帳簿{ちょうぼ}の世界史{せかいし} →</a></section>
+<footer><p><a href="../">← 大航海{だいこうかい}商人{しょうにん}アカデミーへ</a></p><p>金貨{きんか}の数{かず}は学習用{がくしゅうよう}の例{れい}です。</p></footer>
+</main><script type="module" src="./app.js?v=20261020-learn1"></script></body></html>
