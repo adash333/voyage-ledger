@@ -14,7 +14,7 @@ rt{font-size:.55em;color:#53636c}button rt,.hero rt{color:inherit;opacity:.9}bod
 .try{margin-top:12px;padding:14px;border-radius:14px;background:#f1f8f6;border:1px dashed #9fc4c9}
 .try h3{margin-top:0;color:#176b76}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
-.sides{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.sides.stack{grid-template-columns:1fr}
 .side{padding:10px;border-radius:12px;min-width:0;overflow-wrap:anywhere}
 .side.left{background:#e1f0fb;border-top:4px solid #4b9cc8}.side.right{background:#dff6e8;border-top:4px solid #35a975}
 .side h4{margin:0 0 6px;font-size:.86rem}
