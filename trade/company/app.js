@@ -1,4 +1,4 @@
-import {startApp} from './ui.mjs?v=20261018-company1';
+import {startApp} from './ui.mjs?v=20261018-save-mode2';
 // Japanese locale for the company mode. The English page (./en/app.js) supplies its own strings.
 const goods={pepper:'コショウ',silk:'絹織物',glass:'ガラス製品'};
 const money=n=>'金貨'+n.toLocaleString('ja-JP')+'枚';
@@ -51,7 +51,7 @@ startApp({
  saved:f=>'保存しました：'+f,saveFailed:m=>'保存できませんでした：'+m,
  confirmImport:v=>'いまの進行状況を、ファイルの内容（第'+v+'航海）に置き換えますか？',
  loaded:v=>'読み込みました：第'+v+'航海の続きから始めます。',
- loadError:e=>'読み込めませんでした：'+({'Not JSON':'JSONファイルとして読み込めませんでした。','Not a save file':'株式会社版のセーブデータではありません。','Unsupported format':'このバージョンでは読み込めない形式です。'}[e.message]||'セーブデータの形式が正しくありません（'+e.message+'）。'),
+ loadError:e=>'読み込めませんでした：'+({'Not JSON':'JSONファイルとして読み込めませんでした。','Not a save file':'株式会社版のセーブデータではありません。','Free trading save':'これは自由経営モード版のデータです。株式会社版では読み込めません。自由経営モードでアップロードしてください。','Unsupported format':'このバージョンでは読み込めない形式です。'}[e.message]||'セーブデータの形式が正しくありません（'+e.message+'）。'),
  hardBadge:'🔥 本気の社長',easyBadge:'🌱 やさしい',
  voyageLabel:v=>'第'+v+'航海・'+dir(v),loanShort:'借入',shipsShort:n=>n+'隻',
  holding:s=>'いまの在庫：'+s,lastPort:'この港が今回の航海の終点です。',

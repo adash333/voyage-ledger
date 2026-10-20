@@ -1,6 +1,6 @@
-import {renderMap,configureMap} from '../map.mjs?v=20261016-swipe1';
+import {renderMap,configureMap} from '../map.mjs?v=20261018-atlas-en1';
 import {PORTS,GOODS,CAPACITY,FARE,initialState,restore,report,route,portAt,preview,commit,closeVoyage,nextVoyage,canSpecialClose} from '../accounting.mjs';
-import {exportSave,parseSave} from '../save.mjs?v=20261017-save1';
+import {exportSave,parseSave} from '../save.mjs?v=20261018-save-mode2';
 // English UI for the free trading mode. Shares the accounting engine, the map module and the save key with the Japanese page.
 const KEY='voyage-trade-v1',GUIDE='voyage-trade-guide-v1';
 const names={pepper:'Pepper',silk:'Silk',glass:'Glassware'};
@@ -111,7 +111,7 @@ $('specialBtn').addEventListener('click',()=>{if(!confirm('Run a special closing
 $('continueBtn').addEventListener('click',()=>{state=nextVoyage(state);save();render();switchTab('trade');scrollTo({top:0,behavior:'smooth'});});
 $('restartBtn').addEventListener('click',()=>{if(!confirm('Erase all trade history and start over?'))return;state=initialState();save();render();switchTab('trade');scrollTo({top:0,behavior:'smooth'});});
 function saveNote(text,error=false){$('saveMessage').textContent=text;$('saveMessage').classList.toggle('error',error);}
-function saveError(e){return ({'Not JSON':'The file could not be read as JSON.','Not a save file':'This is not a save file for this game.'})[e.message]||'The save data is not valid ('+e.message+').';}
+function saveError(e){return ({'Not JSON':'The file could not be read as JSON.','Not a save file':'This is not a save file for this game.','Company save':'This is Company Mode data. It cannot be loaded in Free Trading Mode. Upload it in Company Mode.','Unsupported format':'This file format is not supported.'})[e.message]||'The save data is not valid ('+e.message+').';}
 $('exportBtn').addEventListener('click',()=>{try{const {filename,json}=exportSave(state);const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);saveNote('Saved: '+filename);}catch(e){saveNote('Could not save: '+e.message,true);}});
 $('importFile').addEventListener('change',async()=>{const file=$('importFile').files[0];$('importFile').value='';if(!file)return;try{const next=parseSave(await file.text());if(!confirm('Replace your current progress with the file (voyage '+next.voyage+')?'))return;state=next;save();pending=null;render();switchTab('trade');saveNote('Loaded: continuing from voyage '+state.voyage+'.');}catch(e){saveNote('Could not load: '+saveError(e),true);}});
 const steps=['① Compare the prices. Goods cost different amounts in the four ports. Think about buying where it is cheap and selling where it is expensive.','② Buy and sell goods. Choose the goods and quantity, review the journal entry, then confirm.','③ Check the books and the statements. Switch between the Trade, Journal and Statements tabs.'];

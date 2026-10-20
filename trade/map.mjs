@@ -1,13 +1,13 @@
 import {PORTS,route} from './accounting.mjs';
 
 // Anchors match the approved illustrated atlas, not a geographic projection.
-const ports={
+let ports={
  venice:{point:[794,315],label:[816,332],align:'start',ship:[35,82],flag:[92,46]},
  alexandria:{point:[1038,744],label:[1010,752],align:'end',ship:[-75,-66],flag:[-130,-155]},
  constantinople:{point:[1086,472],label:[1110,512],align:'end',ship:[-55,100],flag:[-180,52]},
  barcelona:{point:[482,429],label:[502,420],align:'start',ship:[73,54],flag:[132,25]}
 };
-const legs=[
+let legs=[
  ['venice','alexandria',[[815,375],[849,442],[901,520],[949,605],[985,660]]],
  ['alexandria','constantinople',[[1046,675],[1034,596],[1039,541]]],
  ['constantinople','barcelona',[[1024,526],[957,566],[902,594],[823,576],[749,554],[665,541],[580,516],[519,477]]]
@@ -30,7 +30,11 @@ const japanese={
  zoomOut:'全体を見る'
 };
 let labels=japanese;
-export function configureMap(custom){labels={...japanese,...custom};}
+// Each localized atlas can use its own anchors without moving the Japanese map.
+export function configureMap(custom,layout){
+ labels={...japanese,...custom};
+ if(layout){ports=layout.ports;legs=layout.legs;}
+}
 
 export function renderMap(state){
  const $=id=>document.getElementById(id);
@@ -46,8 +50,10 @@ export function renderMap(state){
  }).join('');
  // Names, descriptions and prices come from trusted game constants.
  $('portDots').innerHTML=PORTS.map(p=>{
-  const {point:[x,y],label:[lx,ly],align}=ports[p.id],selected=p.id===current;
-  return '<g data-port="'+p.id+'"><circle cx="'+x+'" cy="'+y+'" r="12" class="port-dot'+(selected?' active':'')+'"/><text x="'+lx+'" y="'+ly+'" text-anchor="'+align+'" class="map-city'+(selected?' active':'')+'">'+labels.portName(p)+'</text></g>';
+  const {point:[x,y],label,align}=ports[p.id],selected=p.id===current;
+  // Some atlases already include city names in the artwork.
+  const city=label?'<text x="'+label[0]+'" y="'+label[1]+'" text-anchor="'+align+'" class="map-city'+(selected?' active':'')+'">'+labels.portName(p)+'</text>':'';
+  return '<g data-port="'+p.id+'"><circle cx="'+x+'" cy="'+y+'" r="12" class="port-dot'+(selected?' active':'')+'"/>'+city+'</g>';
  }).join('');
  const [x,y]=config.point,[sx,sy]=config.ship,[fx,fy]=config.flag,name=labels.portName(port);
  $('shipMarker').setAttribute('transform','translate('+x+' '+y+')');
@@ -59,7 +65,7 @@ export function renderMap(state){
  $('shipTitle').textContent=labels.shipTitle(name);
  const currentText=labels.currentText(name);
  $('mapCurrentText').textContent=currentText;
- $('mapCurrentText').setAttribute('font-size',currentText.length>12?'16':'20');
+ $('mapCurrentText').setAttribute('font-size',$('mapCurrentText').dataset.fontSize||(currentText.length>12?'16':'20'));
  $('voyageMap').setAttribute('aria-label',labels.mapAria(name,sequence.map(nameOf)));
  $('mapLocation').textContent=labels.location(name,state.voyage);
  $('mapPortName').textContent=name;
@@ -75,7 +81,8 @@ export function renderMap(state){
 // Horizontal centering happens inside the frame; vertical position is left to the page scroll.
 function centerShip({page=false}={}){
  const viewport=document.getElementById('mapViewport');
- const scale=document.getElementById('voyageMap').getBoundingClientRect().width/1536;
+ const map=document.getElementById('voyageMap');
+ const scale=map.getBoundingClientRect().width/map.viewBox.baseVal.width;
  const marker=document.getElementById('shipMarker');
  const {point:[x],ship:[sx]}=ports[marker.dataset.port];
  viewport.scrollTo({left:Math.max(0,(x+sx)*scale-viewport.clientWidth/2)});

@@ -123,6 +123,8 @@ test('TRADE-SAVE-JSON: invalid, foreign and tampered files are rejected',()=>{
  assert.throws(()=>parseSave('{not json'),/Not JSON/);
  assert.throws(()=>parseSave('"text"'),/Not a save file/);
  assert.throws(()=>parseSave(JSON.stringify({app:'other',state:initialState()})),/Not a save file/);
+ assert.throws(()=>parseSave(JSON.stringify({...initialState(),app:'other'})),/Not a save file/);
+ assert.throws(()=>parseSave(JSON.stringify({app:SAVE_APP,format:2,state:initialState()})),/Unsupported format/);
  assert.throws(()=>parseSave(JSON.stringify({app:SAVE_APP,format:1})),/Not a save file/);
  let s=initialState();s=buy(s,'e1','glass',3);
  const forged={...s,events:[{...s.events[0],price:1}]};

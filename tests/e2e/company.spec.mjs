@@ -47,7 +47,7 @@ test('COMPANY-UI-002: export, restart, import and continue; broken and free-mode
  await trade(page,'buy','silk',3);await sail(page);
  await expect(page.locator('#summary')).toContainText('金貨460枚');
  await page.locator('#tab-records').click();
- const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'データをJSON形式で保存'}).click()]);
+ const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'JSONをダウンロード'}).click()]);
  expect(download.suggestedFilename()).toMatch(/^company-ledger-\d{8}-\d{4}\.json$/);
  const path=await download.path();
  const data=JSON.parse(readFileSync(path,'utf8'));
@@ -57,7 +57,7 @@ test('COMPANY-UI-002: export, restart, import and continue; broken and free-mode
  await page.locator('#importFile').setInputFiles(file('broken.json','{oops'));
  await expect(page.locator('#saveMessage')).toContainText('JSONファイルとして読み込めませんでした');
  await page.locator('#importFile').setInputFiles(file('trade.json',JSON.stringify({app:'voyage-ledger-trade',format:1,state:{version:1,voyage:1,stop:0,status:'active',events:[]}})));
- await expect(page.locator('#saveMessage')).toContainText('株式会社版のセーブデータではありません');
+ await expect(page.locator('#saveMessage')).toContainText('これは自由経営モード版のデータです');
  const forged=JSON.parse(saved);forged.events[0].price=1;
  await page.locator('#importFile').setInputFiles(file('forged.json',JSON.stringify({app:'voyage-ledger-company',format:1,state:forged})));
  await expect(page.locator('#saveMessage')).toContainText('形式が正しくありません');
@@ -90,18 +90,18 @@ test('COMPANY-UI-003: 360px layout, hard mode switch, interest income and the fr
  await expect(page.locator('#result')).toContainText('＋ 受取利息金貨5枚');
  await page.locator('#tab-records').click();
  await expect(page.locator('#ranking')).toContainText('🔥');
- const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'データをJSON形式で保存'}).click()]);
+ const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'JSONをダウンロード'}).click()]);
  const path=await download.path();
  await page.goto('/trade/');await page.getByRole('button',{name:'スキップ'}).click();
  await page.locator('#importFile').setInputFiles(path);
- await expect(page.locator('#saveMessage')).toContainText('このゲームのセーブデータではありません');
+ await expect(page.locator('#saveMessage')).toContainText('これは株式会社版のデータです');
  await expect(page.locator('#summary')).toContainText('金貨100枚');
 });
 test('COMPANY-UI-004: English page shares the engine and reads a Japanese save',async({page})=>{
  await page.goto('/trade/company/');await page.locator('#setupEasy').click();
  await trade(page,'buy','glass',10);
  await page.locator('#tab-records').click();
- const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'データをJSON形式で保存'}).click()]);
+ const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'JSONをダウンロード'}).click()]);
  const path=await download.path();
  await page.goto('/trade/company/en/');
  await expect(page.locator('#summary')).toContainText('450 coins');
@@ -114,10 +114,32 @@ test('COMPANY-UI-004: English page shares the engine and reads a Japanese save',
  await expect(page.locator('#saveMessage')).toContainText('Loaded: continuing from voyage 1');
  await expect(page.locator('#summary')).toContainText('450 coins');
  await expect(page.locator('#holding')).toContainText('Glassware 10');
+ await expect(page.getByRole('button',{name:'Download JSON',exact:true})).toBeVisible();
+ const [englishDownload]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Download JSON',exact:true}).click()]);
+ expect(englishDownload.suggestedFilename()).toMatch(/^company-ledger-.*\.json$/);
+ expect(JSON.parse(readFileSync(await englishDownload.path(),'utf8')).app).toBe('voyage-ledger-company');
  await page.locator('#tab-fleet').click();
  await expect(page.locator('#shipBtn')).toBeDisabled();
  await expect(page.locator('#loanFacts')).toContainText('Loan balance 700 coins');
  await page.locator('#tab-report').click();
  await expect(page.locator('#report')).toContainText('Both sides match');
+ expect(await noOverflow(page)).toBe(true);
+});
+
+test('COMPANY-MAP-EN: translated atlas keeps the Japanese port anchors and moves the ship after sailing and reload',async({page})=>{
+ await page.goto('/trade/company/en/');await page.locator('#setupEasy').click();
+ await expect(page.locator('#mapIllustration')).toHaveAttribute('href','../../assets/trade-atlas-en.webp?v=20261018-localized2');
+ expect(await page.evaluate(async()=>{const image=new Image();image.src=document.querySelector('#mapIllustration').href.baseVal;await image.decode();return [image.naturalWidth,image.naturalHeight];})).toEqual([1536,1024]);
+ const ports=[['venice','Venice',794,315],['alexandria','Alexandria',1038,744],['constantinople','Constantinople',1086,472],['barcelona','Barcelona',482,429]];
+ for(let i=0;i<ports.length;i++){
+  const [id,name,x,y]=ports[i];
+  await expect(page.locator('#shipMarker')).toHaveAttribute('data-port',id);
+  await expect(page.locator('#shipMarker')).toHaveAttribute('transform',`translate(${x} ${y})`);
+  await expect(page.locator('#mapCurrentText')).toHaveText('Now at: '+name);
+  await page.locator('#mapZoom').click();
+  expect(await page.evaluate(()=>{const f=document.querySelector('#mapViewport').getBoundingClientRect(),s=document.querySelector('#shipSprite').getBoundingClientRect();return s.left>=f.left&&s.right<=f.right&&s.top>=f.top&&s.bottom<=f.bottom;})).toBe(true);
+  await page.locator('#mapZoom').click();
+  if(i<3){await sail(page);await page.reload();}
+ }
  expect(await noOverflow(page)).toBe(true);
 });

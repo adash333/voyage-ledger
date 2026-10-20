@@ -2,7 +2,7 @@
 // All text comes from the locale object `L`; the accounting engine is pure and lives in accounting.mjs.
 import {renderMap,configureMap} from '../map.mjs?v=20261016-swipe1';
 import * as C from './accounting.mjs';
-import {exportSave,parseSave} from './save.mjs?v=20261018-company1';
+import {exportSave,parseSave} from './save.mjs?v=20261018-save-mode2';
 const {PORTS,GOODS,route,initialState,restore,report,portAt,preview,commit,nextVoyage,canSpecialClose,canDefault,REPAY_UNIT,ISSUE_UNITS,LOAN_DEADLINE,SHIP_PRICE,UNLOCK_VOYAGES,UNLOCK_EQUITY,EXIT_MIN_VOYAGES,EXIT_MIN_HARD_VOYAGES,EXIT_MULTIPLE}=C;
 export const KEY='voyage-company-v1',SETUP='voyage-company-setup-v1';
 const TABS=['trade','fleet','journal','report','records'];
@@ -84,6 +84,7 @@ export function startApp(L){
  const restart=()=>{if(!confirm(L.confirmRestart))return;state=initialState();save();clearPreviews();$('celebrate').hidden=true;render();switchTab('trade');scrollTo({top:0,behavior:'smooth'});showSetup();};
  $('restartBtn').addEventListener('click',restart);$('restartAnytime').addEventListener('click',restart);
  // ---- save / load ----
+ $('importBtn').addEventListener('click',()=>$('importFile').click());
  const saveNote=(text,error=false)=>{$('saveMessage').textContent=text;$('saveMessage').classList.toggle('error',error);};
  $('exportBtn').addEventListener('click',()=>{try{const {filename,json}=exportSave(state);const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);saveNote(L.saved(filename));}catch(e){saveNote(L.saveFailed(e.message),true);}});
  $('importFile').addEventListener('change',async()=>{const file=$('importFile').files[0];$('importFile').value='';if(!file)return;try{const next=parseSave(await file.text());if(!confirm(L.confirmImport(next.voyage)))return;state=next;save();clearPreviews();render();switchTab('trade');saveNote(L.loaded(state.voyage));}catch(e){saveNote(L.loadError(e),true);}});

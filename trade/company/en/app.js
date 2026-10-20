@@ -1,4 +1,4 @@
-import {startApp} from '../ui.mjs?v=20261018-company1';
+import {startApp} from '../ui.mjs?v=20261018-save-mode2';
 // English locale for the company mode. Shares the engine, the save key and the JSON format with the Japanese page.
 const goods={pepper:'Pepper',silk:'Silk',glass:'Glassware'};
 const portNames={venice:'Venice',alexandria:'Alexandria',constantinople:'Constantinople',barcelona:'Barcelona'};
@@ -59,7 +59,7 @@ startApp({
  saved:f=>'Saved: '+f,saveFailed:m=>'Could not save: '+m,
  confirmImport:v=>'Replace your current progress with the file (voyage '+v+')?',
  loaded:v=>'Loaded: continuing from voyage '+v+'.',
- loadError:e=>'Could not load: '+({'Not JSON':'the file is not valid JSON.','Not a save file':'this is not a company-mode save file.','Unsupported format':'this file format is not supported.'}[e.message]||'the save data is invalid ('+e.message+').'),
+ loadError:e=>'Could not load: '+({'Not JSON':'the file is not valid JSON.','Not a save file':'this is not a company-mode save file.','Free trading save':'this is Free Trading Mode data. It cannot be loaded in Company Mode. Upload it in Free Trading Mode.','Unsupported format':'this file format is not supported.'}[e.message]||'the save data is invalid ('+e.message+').'),
  hardBadge:'🔥 Serious CEO',easyBadge:'🌱 Easy',
  voyageLabel:v=>'Voyage '+v+' · '+dir(v),loanShort:'Loan',shipsShort:n=>n+' ship'+(n>1?'s':''),
  holding:s=>'In stock: '+s,lastPort:'This port is the end of the voyage.',
