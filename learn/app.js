@@ -1,4 +1,4 @@
-import {rubyHTML,purchaseEntries,entriesBalanced,balanceAfter,profitFor,shipWear,financingCompare,GLOSSARY,QUIZ,SHIP_PRICE,SHIP_LIFE,BAGS} from './content.mjs?v=20261020-learn1';
+import {rubyHTML,purchaseEntries,entriesBalanced,balanceAfter,profitFor,shipWear,financingCompare,GLOSSARY,QUIZ,SHIP_PRICE,SHIP_LIFE,BAGS} from './content.mjs?v=20261020-learn2';
 const RUBY_KEY='voyage-learn-ruby-v1';
 const $=id=>document.getElementById(id);
 const escapeHTML=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
