@@ -69,3 +69,11 @@
   教育コンテンツに広告・アフィリエイトを少し載せる程度は一般的だが、
   収益化を本格化するなら Cloudflare Pages や Netlify への移行も検討する
   （その場合も DNS の CNAME 先を変えるだけで URL はそのまま使える）。
+
+## Google Search Console へのサイトマップ登録
+- `sitemap.xml`（公開ページ 16 件）と `robots.txt`（`Sitemap:` 行つき）をリポジトリのルートに置いてある。
+  ページを増やしたら `sitemap.xml` にも追加する（`tests/sitemap.test.mjs` が漏れを検出する）。
+- Search Console の「プロパティを追加」で **ドメイン** に `5micro.net` を入力し、表示された
+  `google-site-verification=...` をさくらのゾーンに TXT として追加する（エントリ名は `@`、
+  引用符なし）。ドメインプロパティなので `v.5micro.net` を含むすべてのサブドメインが対象になる。
+- 確認後、左メニュー「サイトマップ」に `https://v.5micro.net/sitemap.xml` を入力して送信する。

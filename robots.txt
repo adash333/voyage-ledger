@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /docs/
+Disallow: /specs/
+Disallow: /tests/
+Disallow: /scripts/
+
+Sitemap: https://v.5micro.net/sitemap.xml
