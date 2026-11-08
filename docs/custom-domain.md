@@ -22,6 +22,13 @@
    （`_github-pages-challenge-adash333.5micro.net` に値 `xxxxxxxx`）を控える
 3. 5micro.net の DNS 管理画面で TXT レコードを追加 → GitHub に戻って **Verify**
 
+   さくらインターネットの場合:
+   - レンタルサーバ契約中: サーバコントロールパネル →「ドメイン/SSL」→ 5micro.net の「DNS設定」
+   - ドメインのみの契約: ドメインコントロールパネル → 5micro.net の「ゾーン」→「編集」
+   - 入力例: エントリ名 `_github-pages-challenge-adash333`（`.5micro.net` は付けない）／
+     種別「テキスト(TXT)」／値は GitHub に表示された文字列を引用符なしで貼る
+   - 保存後、数分〜数時間待って Verify。確認は `dig +short TXT _github-pages-challenge-adash333.5micro.net`
+
 ### 2. DNS にサブドメインの CNAME を追加
 5micro.net を管理している DNS（お名前.com / ムームードメイン / Xserver / Cloudflare など）で:
 
