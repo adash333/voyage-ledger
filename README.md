@@ -15,8 +15,9 @@
 ## ローカル実行
 依存ライブラリは不要です。リポジトリのルートで `python -m http.server 8000` を実行し、`http://localhost:8000` を開いてください。
 
-## GitHub Pages
-Settings → Pages → Build and deployment で **Deploy from a branch**、ブランチ **main**、フォルダー **/(root)** を指定してください。URLは https://adash333.github.io/voyage-ledger/ となる予定です。
+## 公開
+公開 URL は **https://v.5micro.net/** です（旧 URL https://adash333.github.io/voyage-ledger/ からは自動で転送されます）。
+main への push で GitHub Actions（`.github/workflows/deploy.yml`）がテスト後に GitHub Pages へデプロイします。Settings → Pages の Source は **GitHub Actions**、Custom domain は `v.5micro.net` です。独自ドメインの設定手順は `docs/custom-domain.md` を参照してください。
 
 ## 教育上の注意
 舞台・人物・金貨の取引額は創作です。複式簿記は大航海時代より前のイタリアで発達しました。MVPは商品勘定を資産として扱い、販売時に売上原価へ振り替える簡略化した継続記録法を採用します。

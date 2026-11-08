@@ -4,7 +4,7 @@ const fs=require('fs');
  const browser=await chromium.launch({headless:true});
  const page=await browser.newPage({viewport:{width:1100,height:900},deviceScaleFactor:1});
  const dir='docs/blog/images';fs.mkdirSync(dir,{recursive:true});
- const base='https://adash333.github.io/voyage-ledger/';
+ const base='https://v.5micro.net/';
  async function shot(name,locator){await locator.scrollIntoViewIfNeeded();await locator.screenshot({path:dir+'/'+name+'.png',animations:'disabled'});}
  await page.goto(base+'learn/',{waitUntil:'networkidle'});
  await page.locator('#buyBtn').click();
