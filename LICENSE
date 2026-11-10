@@ -1,9 +1,27 @@
-MIT License
+Copyright (c) 2026 adash333. All rights reserved.
 
-Copyright (c) 2026 Voyage Ledger contributors
+このリポジトリに含まれるソースコード、文章、画像、その他すべてのコンテンツの著作権は
+adash333 に帰属します。著作権法で認められる範囲（私的使用のための複製、引用など）を除き、
+著作権者の書面による許可なく、複製・改変・再配布・公衆送信・商用利用をすることを禁じます。
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+公開サイト（https://v.5micro.net/）でゲームや読み物を遊ぶ・読むことは自由です。
+GitHub 上でソースコードを閲覧できるのは、GitHub の利用規約にもとづくものであり、
+上記以外の利用を許諾するものではありません。
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+利用の許可に関するお問い合わせ: https://github.com/adash333/voyage-ledger/issues
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+---
+
+Copyright (c) 2026 adash333. All rights reserved.
+
+All source code, text, images and other content in this repository are the property of
+adash333. Except as permitted by applicable copyright law, no part of this repository may
+be copied, modified, redistributed, publicly transmitted or used commercially without
+prior written permission from the copyright holder.
+
+You are free to play and read the published site (https://v.5micro.net/). Being able to
+view this source code on GitHub is governed by the GitHub Terms of Service and does not
+grant any other license.
+
+Note: versions of this repository published before 2026-11-10 were distributed under the
+MIT License. Copies obtained under those versions remain under the MIT License.

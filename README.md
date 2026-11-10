@@ -27,7 +27,9 @@ main への push で GitHub Actions（`.github/workflows/deploy.yml`）がテス
 プライバシーポリシーは `/privacy/`、運営者情報とお問い合わせ先は `/about/` にあります（全ページの下部からリンク）。広告（Google アドセンス）・Amazon アソシエイト・アクセス解析を導入するときの記載も先に入れてあります。
 
 ## ライセンス
-MIT（LICENSE参照）。
+© 2026 adash333. All rights reserved.（LICENSE 参照）
+ソースコード・文章・画像の複製・改変・再配布・商用利用には許可が必要です。公開サイトで遊ぶ・読むことは自由です。
+2026-11-10 より前に公開していた版は MIT ライセンスで配布していました。
 
 ## SPEC駆動開発とテスト
 仕様は `specs/`、画面非依存の会計ロジックは `accounting.mjs`、自動テストは `tests/accounting.test.mjs` に配置しています。
